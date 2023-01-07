@@ -15,7 +15,8 @@ export const middleware = async (req: NextRequest) => {
   });
 
   // do anything with session here:
-  const { user } = session;
+  const { user } = session; 
+
 
   // like mutate user:
   // user.something = someOtherThing;
@@ -30,7 +31,7 @@ export const middleware = async (req: NextRequest) => {
   console.log("from middleware", { user });
 
   // demo:
-  if (user?.admin !== "true") {
+  if (user?.admin !== true) {
     // unauthorized to see pages inside admin/
     return NextResponse.redirect(new URL('/', req.url)) // redirect to /unauthorized page
   }
