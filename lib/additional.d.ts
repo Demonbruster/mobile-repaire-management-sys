@@ -6,6 +6,7 @@ declare module "iron-session" {
     user?: {
       id: number;
       admin?: boolean;
+      username?: string;
     };
   }
 }

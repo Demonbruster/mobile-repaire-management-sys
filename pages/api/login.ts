@@ -1,23 +1,34 @@
 import { withIronSessionApiRoute } from "iron-session/next";
+import { ironOptions } from "../../lib/config";
+
+const user = {
+  id: 1,
+  admin: true,
+  username: process.env.USER || "tobbymarchal@gmail.com",
+  password: process.env.PASSWORD || "password",
+}
 
 export default withIronSessionApiRoute(
-  async function loginRoute(req, res) {
-    // get user from database then:
-    // add user type to IronSession
-    req.session.user = {
-      id: 230,
-      admin: true,
-    };
+	async function loginRoute(req, res) {
+    // only allow POST requests
+    if(req.method !== "POST") {
+      res.status(405).send({ error: "Method not allowed" });
+      return;
+    }
 
-    await req.session.save();
-    res.send({ ok: true });
-  },
-  {
-    cookieName: "myapp_cookiename",
-    password: "complex_password_at_least_32_characters_long",
-    // secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
-    cookieOptions: {
-      secure: process.env.NODE_ENV === "production",
-    },
-  },
+    if(req.body.email !== user.username || req.body.password !== user.password) {
+      res.status(401).send({ error: "Invalid username or password" });
+      return;
+    }
+      
+		req.session.user = {
+			id: 1,
+			admin: true,
+      username: user.username,
+		};
+
+		await req.session.save();
+		res.redirect('/dashboard')
+	},
+	{ ...ironOptions }
 );
