@@ -8,7 +8,7 @@ import {
   Button,
 } from '@mantine/core';
 
-export function AuthenticationTitle() {
+export default function page() {
   return (
     <Container size={420} my={40}>
       <Title
