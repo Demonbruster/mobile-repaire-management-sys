@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
 
-mongoose.connect("mongodb://localhost:27017/mbl-tracker").then(() => {
-  console.log("Connected to MongoDB");
-}).catch((err) => {
-  console.log("Error connecting to MongoDB", err);
-});
+export const connectDB = async () => {
+	mongoose
+		.connect("mongodb://localhost:27017/mbl-tracker")
+		.then(() => {
+			console.log("Connected to MongoDB");
+		})
+		.catch((err) => {
+			console.log("Error connecting to MongoDB", err);
+      throw err;
+		});
+};
 
-
-const db = mongoose.connection;
-
-export default db;
