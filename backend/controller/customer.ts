@@ -13,18 +13,18 @@ async function getCustomers(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function getCustomer(req: NextApiRequest, res: NextApiResponse) {
-  // get id from query
-  // get body from request
-  const { id } = req.query as { id: string | number };
+	// get id from query
+	// get body from request
+	const { id } = req.query as { id: string | number };
 
-  try {
-    const customerById = await customer.findById(id.toString());
-    return res.status(200).json({ success: true, data: customerById });
-  } catch (err) {
-    return res.status(400).json(err);
-  }
+	try {
+		const customerById = await customer.findById(id.toString());
+		return res.status(200).json({ success: true, data: customerById });
+	} catch (err) {
+		return res.status(400).json(err);
+	}
 }
- 
+
 async function createCustomer(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		const newCustomer = await customer.create(req.body);
