@@ -11,8 +11,10 @@ export const customerApi = async (req: NextApiRequest, res: NextApiResponse, wit
 			if (withId) return await getCustomer(req, res);
 			return await getCustomers(req, res);
 		}
-		case "POST":
+		case "POST": {
+			if (withId) return res.status(400).json({ success: false });
 			return await createCustomer(req, res);
+		}
 		case "PUT":
 			return await updateCustomer(req, res);
 		case "DELETE":

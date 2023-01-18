@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import brand from "../models/brand";
+import brand from "./brand.model";
 
 async function getBrands(req: NextApiRequest, res: NextApiResponse) {
 	try {
