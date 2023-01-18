@@ -1,7 +1,7 @@
 // customer controller
 
 import { NextApiRequest, NextApiResponse } from "next";
-import customer from "../models/customer";
+import customer from "../../../backend/models/customer";
 
 async function getCustomers(req: NextApiRequest, res: NextApiResponse) {
 	try {
