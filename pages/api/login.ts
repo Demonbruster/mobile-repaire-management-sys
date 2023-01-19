@@ -28,7 +28,7 @@ export default withIronSessionApiRoute(
 		};
 
 		await req.session.save();
-		res.redirect('/dashboard')
+		res.send({ ok: true });
 	},
 	{ ...ironOptions }
 );
