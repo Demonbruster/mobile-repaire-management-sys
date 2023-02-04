@@ -15,6 +15,10 @@ const deviceSchema = new mongoose.Schema({
   color: {
     type: String,
   },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Customer",
+  },
 });
 
 export default mongoose.models.Device || mongoose.model("Device", deviceSchema);
