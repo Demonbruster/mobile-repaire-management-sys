@@ -39,15 +39,9 @@ export const middleware = async (req: NextRequest) => {
 		return NextResponse.redirect(new URL("/", req.url)); // redirect to /unauthorized page
 	}
 
-	// if already logged in, redirect to /admin
-	if (user?.admin === true) {
-		// redirect to /admin page
-		return NextResponse.redirect(new URL("/dashboard", req.url));
-	}
-
 	return res;
 };
 
 export const config = {
-	matcher: "/",
+	matcher: "/admin/:path*",
 };
