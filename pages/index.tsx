@@ -58,7 +58,7 @@ export default function Page() {
 
   useEffect(() => {
     if (isSuccess) {
-      router.push('/dashboard');
+      router.push('/admin/dashboard');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess])

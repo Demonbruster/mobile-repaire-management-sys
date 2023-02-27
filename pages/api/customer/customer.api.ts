@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { createCustomer, deleteCustomer, getCustomer, getCustomers, updateCustomer } from "./customer.controler";
+import { createCustomer, deleteCustomer, getCustomer, getCustomers, updateCustomer } from "./customer.controller";
 
 export const customerApi = async (req: NextApiRequest, res: NextApiResponse, withId: boolean) => {
 	// request method
