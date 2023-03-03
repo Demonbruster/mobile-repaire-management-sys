@@ -21,6 +21,8 @@ export const middleware = async (req: NextRequest) => {
 	// do anything with session here:
 	const { user } = session;
 
+	//test
+
 	// like mutate user:
 	// user.something = someOtherThing;
 	// or:
