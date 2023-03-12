@@ -1,10 +1,14 @@
+import React from 'react'
+import { useMediaQuery } from '@mantine/hooks';
 import { ActionIcon, AppShell, Flex, Header, Text, Box } from '@mantine/core'
 import { IconUsers, IconDeviceMobile, IconDeviceMobileVibration } from '@tabler/icons-react'
-import React from 'react'
+import { sizes } from '../../constants/constant';
+import DataTable from '../../components/container/DataTable';
 
-const size = 34
+const size = sizes.FOOTER_ICON_SIZE
 
-const dashboard = () => {
+const Dashboard = () => {
+  const isMobile = useMediaQuery('(max-width: 600px)')
 
   const list = [
     {
@@ -23,13 +27,8 @@ const dashboard = () => {
 
   return (
     <AppShell
-      padding="md"
-      // header={
-      //   <Header height={80} px="xs">
-
-      //   </Header>
-      // }
       footer={
+        isMobile ?
         <Box sx={{
           position: 'fixed',
           bottom: 0,
@@ -49,15 +48,15 @@ const dashboard = () => {
               >
                 {data.icon}
               </ActionIcon>
-              <Text c="dimmed" fz="sm" fs='italic'> {data.name} </Text>
+              <Text c="dimmed" fz="xs" fs='italic'> {data.name} </Text>
             </Box>)}
           </Flex>
-        </Box>
+        </Box> : <></>
       }
     >
-      <h1>Dashboard</h1>
+      <DataTable/>
     </AppShell>
   )
 }
 
-export default dashboard
+export default Dashboard

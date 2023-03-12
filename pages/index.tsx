@@ -14,6 +14,7 @@ import * as Yup from 'yup';
 import axios from '../lib/axios';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { reactQueryKey } from '../constants/constant';
 
 const schema = Yup.object().shape({
   email: Yup.string().email().required(),
@@ -30,10 +31,10 @@ type IInitialValues = {
 export default function Page() {
   const router = useRouter();
 
-  const { isLoading, mutateAsync, error, isSuccess } = useMutation('login', (va: IInitialValues) => {
-    return axios.post('/api/login', {
+  const { isLoading, mutateAsync, error, isSuccess } = useMutation(reactQueryKey.login, (va: IInitialValues) => {
+    return axios.post('/login', {
       ...va,
-    });
+    })
   })
 
   const initialValues: IInitialValues = {
@@ -83,7 +84,7 @@ export default function Page() {
 
           {error && <Text color="red" size="sm" align="center" mt={5}>{
             // @ts-ignore
-            error.message || ''
+            error.response.data.error || ''
           }</Text>}
           <Paper withBorder shadow="md" p={30} mt={30} radius="md">
             <TextInput label="Email" placeholder="your@email.com" required  {...getInputProps('email')} />
