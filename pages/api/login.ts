@@ -17,6 +17,7 @@ export default withIronSessionApiRoute(
     }
 
     if(req.body.email !== user.username || req.body.password !== user.password) {
+      //response code unauthorized
       res.status(401).send({ error: "Invalid username or password" });
       return;
     }
