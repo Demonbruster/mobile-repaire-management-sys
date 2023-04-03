@@ -1,9 +1,20 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { defaultBrands } from "../../../constants/constant";
 import brand from "./brand.model";
 
 async function getBrands(req: NextApiRequest, res: NextApiResponse) {
 	try {
-		const brands = await brand.find({});
+		let brands = await brand.find({});
+
+		// if brads is empty create a default brands
+		if (brands.length === 0) {
+			defaultBrands.forEach(async (brandName) => {
+				await brand.create({ name: brandName });
+			});
+
+			brands = await brand.find({});
+		}
+
 		return res.status(200).json({ success: true, data: brands });
 	} catch (err) {
 		return res.status(400).json(err);

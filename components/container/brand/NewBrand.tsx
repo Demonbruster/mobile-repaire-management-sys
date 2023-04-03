@@ -1,6 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import React,{useEffect} from 'react'
 import { useForm } from '@mantine/form'
-import React from 'react'
 import { Box, Text, TextInput, Button, Flex } from '@mantine/core'
+import { useMutation } from 'react-query'
+import { createBrand } from '../../../endpoints/brand'
+import { IBrand } from '../../../constants/types'
 
 const NewBrand = () => {
   const form = useForm({
@@ -14,9 +18,24 @@ const NewBrand = () => {
     }
   })
 
+  const { isError, isLoading, isSuccess, mutateAsync, error } = useMutation((data: IBrand) => createBrand(data))
+
   const onSubmit = (values: { name: string }) => {
-    console.log(values)
+    mutateAsync(values)
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset()
+    }
+  }, [isSuccess])
+
+  useEffect(() => {
+    // @ts-ignore
+    if (isError && error?.message === 'Brand already exists' ) {
+      form.setFieldError('name', 'Brand already exists')
+    }
+  }, [isError])
 
   return (
     <Box>
@@ -26,10 +45,10 @@ const NewBrand = () => {
           <TextInput required label='Name' placeholder='Name' {...form.getInputProps('name')} />
         </Box>
         <Flex mt='md' justify='center' direction='row' gap='md'>
-          <Button type='submit' size='lg' fullWidth>
+          <Button type='submit' loading={isLoading} size='lg' fullWidth>
             Create
           </Button>
-          <Button type='reset' variant='outline' size='lg' fullWidth>
+          <Button type='reset' loading={isLoading} variant='outline' size='lg' fullWidth>
             Reset
           </Button>
         </Flex>
