@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const brandSchema = new mongoose.Schema({
+const modelSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -11,4 +11,4 @@ const brandSchema = new mongoose.Schema({
   }
 });
 
-export default mongoose.models.Brand || mongoose.model("Brand", brandSchema);
+export default mongoose.models.Model || mongoose.model("Model", modelSchema);
