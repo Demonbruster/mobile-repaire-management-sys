@@ -22,6 +22,17 @@ async function getBrand(req: NextApiRequest, res: NextApiResponse) {
 
 async function createBrand(req: NextApiRequest, res: NextApiResponse) {
 	try {
+		const { name } = req.body;
+
+		// check if brand already exists in db then tell user it already exists
+		const currentBrand = await brand.findOne({ name });
+		if (currentBrand) {
+			return res.status(400).json({
+				success: false,
+				message: "Brand already exists",
+			});
+		}
+
 		const newBrand = await brand.create(req.body);
 		return res.status(201).json({ success: true, data: newBrand });
 	} catch (err) {
