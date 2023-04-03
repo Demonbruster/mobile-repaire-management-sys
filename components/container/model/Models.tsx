@@ -5,10 +5,7 @@ import { reactQueryKey } from '../../../constants/constant'
 import { getModels } from '../../../endpoints/model'
 
 function Models() {
-  const { isLoading, data, isError, error } = useQuery(reactQueryKey.models, async () => getModels(), {
-    // call once it is mounted
-    
-  })
+  const { isLoading, data, isError, error } = useQuery(reactQueryKey.models, async () => getModels())
 
   if (isLoading) {
     return <div>Loading...</div>
