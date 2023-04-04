@@ -9,7 +9,7 @@ export const deviceApi = async (req: NextApiRequest, res: NextApiResponse, withI
     case "GET": {
       // if query has id then get device by id else get all devices
       if (withId) return await getDevice(req, res);
-      return await getDevices(req, res);
+      return await getDevices(res);
     }
     case "POST": {
       if (withId) return res.status(400).json({ success: false });
