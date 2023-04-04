@@ -11,13 +11,11 @@ import { createModel, IModel_FE } from '../../../endpoints/model'
 import showNotification from '../../../utils/notifications'
 import queryClient from '../../../utils/queryClinet'
 
-type Props = {}
-
-function NewModel({ }: Props) {
+function NewModel() {
   const { data, isLoading, error, isError } = useQuery(IReactQueryKey.brands, getBrands)
 
   const modelMutation = useMutation((value: IModel_FE) => createModel(value), {
-    onSuccess(data, variables, context) {
+    onSuccess(data) {
       queryClient.invalidateQueries([IReactQueryKey.models, data.brandId])
     },
   })

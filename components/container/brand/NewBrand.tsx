@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React,{useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from '@mantine/form'
 import { Box, Text, TextInput, Button, Flex } from '@mantine/core'
 import { useMutation } from 'react-query'
 import { createBrand } from '../../../endpoints/brand'
-import { IBrand } from '../../../constants/types'
+import { IBrand, IReactQueryKey } from '../../../constants/types'
+import queryClient from '../../../utils/queryClinet'
 
 const NewBrand = () => {
   const form = useForm({
@@ -18,7 +19,11 @@ const NewBrand = () => {
     }
   })
 
-  const { isError, isLoading, isSuccess, mutateAsync, error } = useMutation((data: IBrand) => createBrand(data))
+  const { isError, isLoading, isSuccess, mutateAsync, error } = useMutation((data: IBrand) => createBrand(data), {
+    onSuccess() {
+      queryClient.invalidateQueries([IReactQueryKey.brands])
+    },
+  })
 
   const onSubmit = (values: { name: string }) => {
     mutateAsync(values)
@@ -32,7 +37,7 @@ const NewBrand = () => {
 
   useEffect(() => {
     // @ts-ignore
-    if (isError && error?.message === 'Brand already exists' ) {
+    if (isError && error?.message === 'Brand already exists') {
       form.setFieldError('name', 'Brand already exists')
     }
   }, [isError])
