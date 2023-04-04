@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 
+const dbURI = process.env.MONGODB_URI || "mongodb://localhost:27017/mbl-tracker";
+
 export const connectDB = async () => {
 	mongoose
-		.connect("mongodb://localhost:27017/mbl-tracker")
+		.connect(dbURI)
 		.then(() => {
 			console.log("Connected to MongoDB");
 		})
@@ -11,4 +13,3 @@ export const connectDB = async () => {
       throw err;
 		});
 };
-
