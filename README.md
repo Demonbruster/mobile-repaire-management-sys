@@ -1,3 +1,20 @@
+## How to setup
+ - Clone the repo
+ - setup a `.env.local` file with the following variables
+    - `IRON_COOKIE_NAME`
+    - `IRON_COOKIE_PASSWORD`
+    - `USER`
+    - `PASSWORD`
+    - `MONGODB_URI`
+- Commands
+    - Run `yarn` to install all the dependencies
+    - Run `yarn dev` to start the development server
+    - Run `yarn build` to build the app for production
+    - Run `yarn start` to start the production server
+
+## How to use
+- All api uri's are prefixed with `/api`
+
 ## Folder structure
 
 ```
