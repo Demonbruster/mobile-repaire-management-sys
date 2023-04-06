@@ -5,7 +5,7 @@ import deviceModel from "./device.model";
 
 async function getDevices(res: NextApiResponse) {
 	try {
-		const devices = await deviceModel.find({});
+		const devices = await deviceModel.find({}).populate("owner").populate("model");
 		return res.status(200).json({ success: true, device: devices });
 	} catch (err) {
 		return res.status(400).json(err);
@@ -15,7 +15,7 @@ async function getDevices(res: NextApiResponse) {
 async function getDevice(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		const { id } = req.query as { id: string | number };
-		const device = await deviceModel.findById(id.toString());
+		const device = await deviceModel.findById(id.toString()).populate("owner").populate("model");
 		return res.status(200).json({ success: true, device: device });
 	} catch (err) {
 		return res.status(400).json(err);
