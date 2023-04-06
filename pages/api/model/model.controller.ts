@@ -5,7 +5,7 @@ async function getModel(req: NextApiRequest, res: NextApiResponse) {
 	// get model by id
 	const { id } = req.query as { id: string | number };
 	try {
-		const currentModel = await model.findById(id);
+		const currentModel = await model.findById(id).populate("brand");
 		return res.status(200).json({ success: true, data: currentModel });
 	} catch (err) {
 		return res.status(400).json(err);
@@ -15,7 +15,7 @@ async function getModel(req: NextApiRequest, res: NextApiResponse) {
 async function getModels(req: NextApiRequest, res: NextApiResponse) {
 	// get all models
 	try {
-		const models = await model.find({});
+		const models = await model.find({}).populate("brand");
 		return res.status(200).json({ success: true, data: models });
 	} catch (err) {
 		return res.status(400).json(err);
