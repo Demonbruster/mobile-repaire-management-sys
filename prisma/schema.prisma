@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Brand {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  models Model[]
+}
+
+model Model{
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  brand Brand  @relation(fields: [brandId], references: [id])
+  brandId Int
+  devices Device[]
+}
+
+model Device{
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  model Model  @relation(fields: [modelId], references: [id])
+  modelId Int
+  customer Customer @relation(fields: [customerId], references: [id])
+  customerId Int
+  repairs Repair[]
+}
+
+model Customer {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  devices Device[]
+}
+
+model Repair {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  device Device @relation(fields: [deviceId], references: [id])
+  deviceId Int
+  repairType RepairType @relation(fields: [repairTypeId], references: [id])
+  repairTypeId Int
+  repairStatus RepairStatus @relation(fields: [repairStatusId], references: [id])
+  repairStatusId Int
+  repairPriority RepairPriority @relation(fields: [repairPriorityId], references: [id])
+  repairPriorityId Int
+  repairDate DateTime
+  repairPrice Int
+  repairDescription String
+  repairNotes String
+}
+
+model RepairType {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  repairs Repair[]
+}
+
+model RepairStatus {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  repairs Repair[]
+}
+
+model RepairPriority {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  repairs Repair[]
+}
+

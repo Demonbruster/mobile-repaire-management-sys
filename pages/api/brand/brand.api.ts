@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { createBrand, deleteBrand, getBrand, getBrands, updateBrand } from "./brand.controller";
+import { createBrand, deleteBrand, getBrand, getBrands, updateBrand } from "./brand.controller.prisma";
 
 export const brandApi = async (req: NextApiRequest, res: NextApiResponse, withId: boolean) => {
 	// request method
