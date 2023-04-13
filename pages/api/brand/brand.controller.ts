@@ -6,14 +6,14 @@ async function getBrands(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		let brands = await brand.find({});
 
-		// if brads is empty create a default brands
-		if (brands.length === 0) {
-			defaultBrands.forEach(async (brandName) => {
-				await brand.create({ name: brandName });
-			});
+		// // if brads is empty create a default brands
+		// if (brands.length === 0) {
+		// 	defaultBrands.forEach(async (brandName) => {
+		// 		await brand.create({ name: brandName });
+		// 	});
 
-			brands = await brand.find({});
-		}
+		// 	brands = await brand.find({});
+		// }
 
 		return res.status(200).json({ success: true, data: brands });
 	} catch (err) {
