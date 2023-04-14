@@ -2,7 +2,7 @@ import axios from "../lib/axios";
 import { url_path } from "../constants/apiPath";
 
 export interface ICustomer_FE {
-  name: string;
+  name?: string;
   phone: string;
 }
 

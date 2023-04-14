@@ -4,6 +4,7 @@ import { ActionIcon, AppShell, Flex, Header, Text, Box } from '@mantine/core'
 import { IconUsers, IconDeviceMobile, IconDeviceMobileVibration } from '@tabler/icons-react'
 import { sizes } from '../../constants/constant';
 import DataTable from '../../components/container/DataTable';
+import NewRepairer from '../../components/container/repairer/NewRepairer';
 
 const size = sizes.FOOTER_ICON_SIZE
 
@@ -54,6 +55,8 @@ const Dashboard = () => {
         </Box> : <></>
       }
     >
+      <NewRepairer/>
+      <hr />
       <DataTable/>
     </AppShell>
   )
