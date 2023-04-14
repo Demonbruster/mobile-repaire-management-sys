@@ -49,12 +49,22 @@ export default function NewRepairer() {
   }, [customerMutation])
 
   const listOfCustomers = useMemo(() => {
+    if(!customerQuery.isSuccess) return []
     return customerQuery.data && customerQuery.data.data?.map((customer: any, index: number) => ({
       label: customer.phone,
       value: customer._id,
       key: index
     })) || []
-  }, [customerQuery.data])
+  }, [customerQuery.data, customerQuery.isSuccess])
+
+  const listOfDevices = useMemo(() => {
+    if(!deviceQuery.isSuccess) return []
+    return deviceQuery.data && deviceQuery.data.data?.map((device: any, index: number) => ({
+      label: device.name,
+      value: device._id,
+      key: index
+    })) || []
+  }, [deviceQuery.data, deviceQuery.isSuccess])
 
   return (
     <Box p='sm'>
@@ -82,11 +92,7 @@ export default function NewRepairer() {
             label='Device'
             placeholder='Device'
             {...form.getInputProps('device')}
-            data={deviceQuery.data && deviceQuery.data.data?.map((device: any, index: number) => ({
-              label: device.name,
-              value: device._id,
-              key: index
-            }))}
+            data={listOfDevices}
           />
 
           <TextInput
