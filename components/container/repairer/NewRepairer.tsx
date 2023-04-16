@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { useForm } from '@mantine/form'
-import { Box, Flex, Select, Text, TextInput } from '@mantine/core'
+import { Box, Button, Flex, Group, Select, Text, TextInput } from '@mantine/core'
 import { useMutation, useQuery } from 'react-query'
 import { IconChevronDown } from '@tabler/icons-react'
 import { DatePicker } from '@mantine/dates';
@@ -11,6 +12,8 @@ import { getDevices } from '../../../endpoints/device'
 import { IRepairer_FE, createRepairer } from '../../../endpoints/repairer'
 import queryClient from '../../../utils/queryClinet'
 import DatePickerModal from '../../common/DatePickerModal/DatePickerModal'
+import showNotification from '../../../utils/notifications'
+import { modals } from '@mantine/modals'
 
 export default function NewRepairer() {
   const customerQuery = useQuery(reactQueryKey.customers, async () => getCustomers())
@@ -51,6 +54,13 @@ export default function NewRepairer() {
     validateInputOnChange: ['expectedDeliveryDate']
   })
 
+  const customerModal = (value: string) => modals.open({
+    title: 'Create Customer',
+    children: (
+      <CustomerModalChild value={value} onSubmit={onCustomerSubmit} />
+    ),
+  })
+
   const onSubmit = useCallback((values: IRepairer_FE) => {
     repairerMutation.mutateAsync(values)
   }, [repairerMutation])
@@ -77,6 +87,60 @@ export default function NewRepairer() {
     })) || []
   }, [deviceQuery.data, deviceQuery.isSuccess])
 
+  useEffect(() => {
+    if (customerMutation.isSuccess) {
+      showNotification({
+        title: 'Success',
+        message: 'Customer created successfully',
+        type: 'success'
+      })
+      modals.closeAll();
+      form.setFieldValue('customer', customerMutation.data.data._id)
+    }
+  }, [customerMutation.isSuccess])
+
+  useEffect(() => {
+    if (repairerMutation.isSuccess) {
+      showNotification({
+        title: 'Success',
+        message: 'Repairer created successfully',
+        type: 'success'
+      })
+      form.reset()
+    }
+  }, [repairerMutation.isSuccess])
+
+  useEffect(() => {
+    if (repairerMutation.isError) {
+      showNotification({
+        title: 'Error',
+        message: 'Repairer creation failed',
+        type: 'error'
+      })
+    }
+  }, [repairerMutation.isError])
+
+  const CustomerModalChild = ({ value, onSubmit }: { value: string; onSubmit: (values: ICustomer_FE) => void }) => {
+    const [customerValue, setCustomerValue] = useState<string>(value)
+
+    return (
+      <Flex justify='center' align='center' gap='sm'>
+        <TextInput label='Phone' placeholder='Phone' value={customerValue} onChange={(e) => {
+          setCustomerValue(e.currentTarget.value)
+        }} />
+        <Button mt='xl' loading={
+          customerMutation.isLoading
+        } onClick={() => {
+          onSubmit({
+            phone: customerValue,
+          })
+        }}>+</Button>
+      </Flex>
+    )
+  }
+
+
+
   return (
     <Box p='sm'>
       <Text fz='lg' fw='bold'> Create new device </Text>
@@ -93,6 +157,12 @@ export default function NewRepairer() {
             {...form.getInputProps('customer')}
             data={listOfCustomers}
             getCreateLabel={(value) => `+ customer: ${value}`}
+            onCreate={(value) => {
+              // open Create customer modal with value
+              // setCustomerValue(value)
+              customerModal(value);
+              return value
+            }}
           />
 
           <Select
@@ -146,6 +216,14 @@ export default function NewRepairer() {
             value={form.values.expectedDeliveryDate}
             error={form.errors.expectedDeliveryDate}
           />
+          <Group position='center'>
+            <Button type='submit' loading={repairerMutation.isLoading} size='lg' fullWidth>
+              Create
+            </Button>
+            <Button type='reset' loading={repairerMutation.isLoading} variant='outline' size='lg' fullWidth>
+              Reset
+            </Button>
+          </Group>
 
         </Flex>
       </form>
