@@ -9,7 +9,7 @@ interface IProps {
   onChange: (date: Date) => void;
 }
 
-function DatePickerModal({ label, value, placeholder, onChange }: IProps & InputWrapperBaseProps & { value?: Date }) {
+function DatePickerModal({ label, value, placeholder, onChange, error }: IProps & InputWrapperBaseProps & { value?: Date }) {
   const [date, setDate] = useState<Date | null>(value ?? null);
 
   const openModal = () => modals.open({
@@ -27,7 +27,7 @@ function DatePickerModal({ label, value, placeholder, onChange }: IProps & Input
     ),
   });
   return (
-    <TextInput onClick={openModal} label={label} placeholder={placeholder} value={value?.toDateString()} readOnly />
+    <TextInput onClick={openModal} label={label} placeholder={placeholder} value={value?.toDateString()} readOnly error={error} />
   )
 }
 

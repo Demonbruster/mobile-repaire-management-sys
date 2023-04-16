@@ -38,6 +38,17 @@ export default function NewRepairer() {
       entryDate: new Date(),
       expectedDeliveryDate: new Date()
     },
+    validate: {
+      expectedDeliveryDate: (value) => {
+        if (!value) return 'Expected Delivery Date is required'
+        // it can not be less than entry date
+        const entryDateToTotalSecs = form.values.entryDate.getTime() / 1000
+        const expectedDeliveryDateToTotalSecs = value.getTime() / 1000
+
+        if (entryDateToTotalSecs > expectedDeliveryDateToTotalSecs) return 'Expected Delivery Date can not be less than Entry Date'
+      },
+    },
+    validateInputOnChange: ['expectedDeliveryDate']
   })
 
   const onSubmit = useCallback((values: IRepairer_FE) => {
@@ -113,11 +124,6 @@ export default function NewRepairer() {
             {...form.getInputProps('notes')}
           />
 
-          {/* <DatePicker
-            placeholder='Entry Date'
-            {...form.getInputProps('entryDate')}
-          /> */}
-
           <DatePickerModal onChange={
             (date) => {
               form.setFieldValue('entryDate', date)
@@ -126,16 +132,23 @@ export default function NewRepairer() {
             placeholder='Select Date'
             label='Entry date'
             value={form.values.entryDate}
+            error={form.errors.entryDate}
           />
 
-          <DatePicker
-            placeholder='Expected Delivery Date'
-            {...form.getInputProps('expectedDeliveryDate')}
+          <DatePickerModal
+            onChange={
+              (date) => {
+                form.setFieldValue('expectedDeliveryDate', date)
+              }
+            }
+            placeholder='Select Date'
+            label='Expected delivery date'
+            value={form.values.expectedDeliveryDate}
+            error={form.errors.expectedDeliveryDate}
           />
 
         </Flex>
       </form>
-
 
     </Box>
   )
