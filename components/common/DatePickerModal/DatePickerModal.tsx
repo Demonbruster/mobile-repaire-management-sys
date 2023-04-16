@@ -1,27 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { modals } from '@mantine/modals';
-import { InputWrapperBaseProps, TextInput } from '@mantine/core';
+import { Group, InputWrapperBaseProps, TextInput } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
 
 interface IProps {
   label?: React.ReactNode;
   placeholder?: string;
+  onChange: (date: Date) => void;
 }
 
-function DatePickerModal({ label, value, placeholder }: IProps & InputWrapperBaseProps & { value?: Date}) {
-  const openModal = () => modals.openConfirmModal({
+function DatePickerModal({ label, value, placeholder, onChange }: IProps & InputWrapperBaseProps & { value?: Date }) {
+  const [date, setDate] = useState<Date | null>(value ?? null);
+
+  const openModal = () => modals.open({
     title: 'Select your date',
     children: (
-      <>
-        This action is so important that you are required to confirm it with a modal. Please click
-        one of these buttons to proceed.
-      </>
+      <Group position='center'>
+        <DatePicker value={date} size='md' onChange={
+          (date) => {
+            setDate(date);
+            onChange(date || new Date());
+            modals.closeAll();
+          }
+        } />
+      </Group>
     ),
-    labels: { confirm: 'Confirm', cancel: 'Cancel' },
-    onCancel: () => console.log('Cancel'),
-    onConfirm: () => console.log('Confirmed'),
   });
   return (
-    <TextInput onClick={openModal} label={label} placeholder={placeholder} value={value?.toDateString()} />
+    <TextInput onClick={openModal} label={label} placeholder={placeholder} value={value?.toDateString()} readOnly />
   )
 }
 

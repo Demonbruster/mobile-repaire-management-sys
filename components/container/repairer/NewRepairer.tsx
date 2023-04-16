@@ -49,7 +49,7 @@ export default function NewRepairer() {
   }, [customerMutation])
 
   const listOfCustomers = useMemo(() => {
-    if(!customerQuery.isSuccess) return []
+    if (!customerQuery.isSuccess) return []
     return customerQuery.data && customerQuery.data.data?.map((customer: any, index: number) => ({
       label: customer.phone,
       value: customer._id,
@@ -58,7 +58,7 @@ export default function NewRepairer() {
   }, [customerQuery.data, customerQuery.isSuccess])
 
   const listOfDevices = useMemo(() => {
-    if(!deviceQuery.isSuccess) return []
+    if (!deviceQuery.isSuccess) return []
     return deviceQuery.data && deviceQuery.data.data?.map((device: any, index: number) => ({
       label: device.name,
       value: device._id,
@@ -118,7 +118,15 @@ export default function NewRepairer() {
             {...form.getInputProps('entryDate')}
           /> */}
 
-          <DatePickerModal placeholder='Select Date' label='Entry date' value={form.values.entryDate}/>
+          <DatePickerModal onChange={
+            (date) => {
+              form.setFieldValue('entryDate', date)
+            }
+          }
+            placeholder='Select Date'
+            label='Entry date'
+            value={form.values.entryDate}
+          />
 
           <DatePicker
             placeholder='Expected Delivery Date'
