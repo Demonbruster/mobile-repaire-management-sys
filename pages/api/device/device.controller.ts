@@ -6,7 +6,7 @@ import deviceModel from "./device.model";
 async function getDevices(res: NextApiResponse) {
 	try {
 		const devices = await deviceModel.find({}).populate("owner").populate("model");
-		return res.status(200).json({ success: true, device: devices });
+		return res.status(200).json({ success: true, data: devices });
 	} catch (err) {
 		return res.status(400).json(err);
 	}
@@ -16,7 +16,7 @@ async function getDevice(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		const { id } = req.query as { id: string | number };
 		const device = await deviceModel.findById(id.toString()).populate("owner").populate("model");
-		return res.status(200).json({ success: true, device: device });
+		return res.status(200).json({ success: true, data: device });
 	} catch (err) {
 		return res.status(400).json(err);
 	}
@@ -48,7 +48,7 @@ async function createDevice(req: NextApiRequest, res: NextApiResponse) {
 			customer: customer ? customer._id : newCustomer?._id,
 		});
 
-		return res.status(201).json({ success: true, device: newDevice });
+		return res.status(201).json({ success: true, data: newDevice });
 	} catch (err) {
 		return res.status(400).json(err);
 	}
@@ -64,7 +64,7 @@ async function updateDevice(req: NextApiRequest, res: NextApiResponse) {
 			runValidators: true,
 		});
 
-		return res.status(200).json({ success: true, device: updatedDevice });
+		return res.status(200).json({ success: true, data: updatedDevice });
 	} catch (err) {
 		return res.status(400).json(err);
 	}
@@ -94,7 +94,7 @@ async function softDeleteDevice(req: NextApiRequest, res: NextApiResponse) {
 		device.isDeleted = true;
 		await device.save();
 
-		return res.status(200).json({ success: true, device: device });
+		return res.status(200).json({ success: true, data: device });
 	} catch (err) {
 		return res.status(400).json(err);
 	}

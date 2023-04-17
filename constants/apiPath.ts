@@ -3,4 +3,5 @@ export const url_path = {
   brand: "/brand",
   model: "/model",
   customer: "/customer",
+  repairer: "/repairer",
 };

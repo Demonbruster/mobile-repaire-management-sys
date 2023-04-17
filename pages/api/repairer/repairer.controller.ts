@@ -69,16 +69,21 @@ async function getRepairerByDeviceId(req: NextApiRequest, res: NextApiResponse, 
 async function createRepairer(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		// check device id
-		const { deviceId } = req.body as { deviceId: string | number };
-		const device = await deviceModel.findById(deviceId.toString()).populate("customer");
+		const { device:deviceId } = req.body as { device: string | number };
+		const device = await deviceModel.findById(deviceId.toString()).populate("owner");
 		if (!device) {
 			return res.status(400).json({ success: false, message: "Device not found" });
 		}
 
 		const newRepairer = await repairerModel.create({
-			...req.body,
+			customer: req.body.customer,
+			status: 'pending',
+			charge: req.body.charge,
+			problem: req.body.problem,
+			notes: req.body.notes,
+			entryDate: req.body.entryDate,
+			expectedDeliveryDate: req.body.expectedDeliveryDate,
 			device: device._id,
-			customer: device.customer._id,
 		});
 
 		return res.status(201).json({ success: true, repairer: newRepairer });
