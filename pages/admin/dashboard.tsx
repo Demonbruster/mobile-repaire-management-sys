@@ -5,6 +5,7 @@ import { IconUsers, IconDeviceMobile, IconDeviceMobileVibration } from '@tabler/
 import { sizes } from '../../constants/constant';
 import DataTable from '../../components/container/DataTable';
 import NewRepairer from '../../components/container/repairer/NewRepairer';
+import NewModel from '../../components/container/model/NewModel';
 
 const size = sizes.FOOTER_ICON_SIZE
 
@@ -55,6 +56,7 @@ const Dashboard = () => {
         </Box> : <></>
       }
     >
+      <NewModel />
       <NewRepairer/>
       <hr />
       <DataTable/>

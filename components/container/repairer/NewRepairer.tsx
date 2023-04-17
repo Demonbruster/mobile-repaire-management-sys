@@ -27,7 +27,7 @@ export default function NewRepairer() {
 
   const customerMutation = useMutation((value: ICustomer_FE) => createCustomer(value), {
     onSuccess() {
-      queryClient.invalidateQueries([reactQueryKey.repairer, reactQueryKey.customers, reactQueryKey.devices])
+      queryClient.invalidateQueries([reactQueryKey.customers])
     },
   })
 

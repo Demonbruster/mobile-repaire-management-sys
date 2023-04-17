@@ -9,6 +9,7 @@ const repairerSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Device",
 	},
+	// pending, in-progress, completed, delivered, cancelled, cancelled-delivered
 	status: {
 		type: String,
 		required: true,

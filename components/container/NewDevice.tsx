@@ -16,7 +16,7 @@ interface IProps {
   callBack?: () => void
 }
 
-function NewDevice({ name = '', callBack = () => {} }: IProps) {
+function NewDevice({ name = '', callBack = () => { } }: IProps) {
 
   const modelQuery = useQuery(reactQueryKey.models, async () => getModels())
   const ownerQuery = useQuery(reactQueryKey.customers, async () => getCustomers())
@@ -41,7 +41,7 @@ function NewDevice({ name = '', callBack = () => {} }: IProps) {
   }, [modelQuery.data])
 
   const listOfOwner = useMemo(() => {
-    return ownerQuery.data && ownerQuery.data.data?.map((owner: any, index: number) => ({ label: owner.name, value: owner._id, key: index })) || []
+    return ownerQuery.data && ownerQuery.data.data?.map((owner: any, index: number) => ({ label: owner.phone + (owner.name ? ' - ' + owner.name : ''), value: owner._id, key: index })) || []
   }, [ownerQuery.data])
 
   useEffect(() => {
