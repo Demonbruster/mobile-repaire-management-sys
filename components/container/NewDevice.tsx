@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { Box, Text, TextInput, Select, Flex, Button } from '@mantine/core'
 import { useForm } from '@mantine/form';
@@ -11,7 +11,12 @@ import showNotification from '../../utils/notifications';
 import { IconChevronDown } from '@tabler/icons-react';
 import { getCustomers } from '../../endpoints/customers';
 
-function NewDevice() {
+interface IProps {
+  name?: string
+  callBack?: () => void
+}
+
+function NewDevice({ name = '', callBack = () => {} }: IProps) {
 
   const modelQuery = useQuery(reactQueryKey.models, async () => getModels())
   const ownerQuery = useQuery(reactQueryKey.customers, async () => getCustomers())
@@ -23,13 +28,21 @@ function NewDevice() {
 
   const form = useForm({
     initialValues: {
-      name: '',
+      name,
       model: '',
       imei: '',
       color: '',
       owner: '',
     },
   })
+
+  const listOfModal = useMemo(() => {
+    return modelQuery.data && modelQuery.data.data?.map((model: any, index: number) => ({ label: model.name, value: model._id, key: index })) || []
+  }, [modelQuery.data])
+
+  const listOfOwner = useMemo(() => {
+    return ownerQuery.data && ownerQuery.data.data?.map((owner: any, index: number) => ({ label: owner.name, value: owner._id, key: index })) || []
+  }, [ownerQuery.data])
 
   useEffect(() => {
     if (deviceMutation.isSuccess) {
@@ -39,6 +52,7 @@ function NewDevice() {
         message: 'Device created successfully.',
         type: 'success',
       })
+      callBack();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deviceMutation.isSuccess])
@@ -71,14 +85,14 @@ function NewDevice() {
             nothingFound="No options"
             rightSection={<IconChevronDown size="1rem" />}
             rightSectionWidth={30} label='Model' placeholder='Model' {...form.getInputProps('model')}
-            data={modelQuery.data && modelQuery.data.data?.map((model: any, index: number) => ({ label: model.name, value: model._id, key: index }))} />
+            data={listOfModal} />
           <TextInput label='IMEI' placeholder='IMEI' {...form.getInputProps('imei')} />
           <TextInput label='Color' placeholder='Color' {...form.getInputProps('color')} />
           <Select searchable
             nothingFound="No options"
             rightSection={<IconChevronDown size="1rem" />}
             rightSectionWidth={30} label='Owner Phone' placeholder='Owner Phone' {...form.getInputProps('owner')}
-            data={ownerQuery.data && ownerQuery.data.data?.map((owner: any, index: number) => ({ label: owner.phone, value: owner._id, key: index }))} />
+            data={listOfOwner} />
         </Flex>
         <Flex mt='md' justify='center' direction='row' gap='md'>
           <Button type='submit' loading={deviceMutation.isLoading} size='lg' fullWidth>

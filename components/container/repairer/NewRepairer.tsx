@@ -4,7 +4,6 @@ import { useForm } from '@mantine/form'
 import { Box, Button, Flex, Group, Select, Text, TextInput } from '@mantine/core'
 import { useMutation, useQuery } from 'react-query'
 import { IconChevronDown } from '@tabler/icons-react'
-import { DatePicker } from '@mantine/dates';
 
 import { ICustomer_FE, createCustomer, getCustomers } from '../../../endpoints/customers'
 import { reactQueryKey } from '../../../constants/constant'
@@ -14,6 +13,7 @@ import queryClient from '../../../utils/queryClinet'
 import DatePickerModal from '../../common/DatePickerModal/DatePickerModal'
 import showNotification from '../../../utils/notifications'
 import { modals } from '@mantine/modals'
+import NewDevice from '../NewDevice'
 
 export default function NewRepairer() {
   const customerQuery = useQuery(reactQueryKey.customers, async () => getCustomers())
@@ -61,6 +61,13 @@ export default function NewRepairer() {
     ),
   })
 
+  const deviceModal = (value: string) => modals.open({
+    title: 'Create Device',
+    children: (
+      <DeviceModalChild value={value}   />
+    ),
+  })
+
   const onSubmit = useCallback((values: IRepairer_FE) => {
     repairerMutation.mutateAsync(values)
   }, [repairerMutation])
@@ -72,7 +79,7 @@ export default function NewRepairer() {
   const listOfCustomers = useMemo(() => {
     if (!customerQuery.isSuccess) return []
     return customerQuery.data && customerQuery.data.data?.map((customer: any, index: number) => ({
-      label: customer.phone,
+      label: customer.phone + ' - ' + customer.name,
       value: customer._id,
       key: index
     })) || []
@@ -139,7 +146,9 @@ export default function NewRepairer() {
     )
   }
 
-
+  const DeviceModalChild = ({ value }: { value: string }) => {
+    return <NewDevice name={value} callBack={() => {modals.closeAll()}} />
+  }
 
   return (
     <Box p='sm'>
@@ -159,7 +168,6 @@ export default function NewRepairer() {
             getCreateLabel={(value) => `+ customer: ${value}`}
             onCreate={(value) => {
               // open Create customer modal with value
-              // setCustomerValue(value)
               customerModal(value);
               return value
             }}
@@ -167,6 +175,7 @@ export default function NewRepairer() {
 
           <Select
             searchable
+            creatable
             nothingFound="No options"
             rightSection={<IconChevronDown size="1rem" />}
             rightSectionWidth={30}
@@ -174,6 +183,12 @@ export default function NewRepairer() {
             placeholder='Device'
             {...form.getInputProps('device')}
             data={listOfDevices}
+            getCreateLabel={(value) => `+ device: ${value}`}
+            onCreate={(value) => {
+              // open Create device modal with value
+              deviceModal(value);
+              return value;
+            }}
           />
 
           <TextInput
