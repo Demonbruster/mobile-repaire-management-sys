@@ -5,7 +5,7 @@ import repairerModel from "./repairer.model";
 
 async function getRepairers(req: NextApiRequest, res: NextApiResponse) {
 	try {
-		const repairers = await repairerModel.find({});
+		const repairers = await repairerModel.find({}).populate("customer").populate("device");
 		return res.status(200).json({ success: true, repairers: repairers });
 	} catch (err) {
 		return res.status(400).json(err);

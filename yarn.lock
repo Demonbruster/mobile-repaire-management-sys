@@ -2859,10 +2859,10 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-mantine-datatable@^1.7.39:
-  version "1.7.39"
-  resolved "https://registry.yarnpkg.com/mantine-datatable/-/mantine-datatable-1.7.39.tgz#eccfd727f91205bc0c3884b18c8a62ac8ca2fddd"
-  integrity sha512-MO7ka3bmvbAY69HZOw0E94tg4tJDSIH2hmKxKnByxvw62Y27yzc6aaX9IyvjSBquYdQnxKwTNAfgFq2674M11g==
+mantine-datatable@^2.4.12:
+  version "2.4.12"
+  resolved "https://registry.yarnpkg.com/mantine-datatable/-/mantine-datatable-2.4.12.tgz#52caad02a7adb85a4a861b37ea8a2e856cf6b847"
+  integrity sha512-g7XIssQmYxyuQ7i5cc1wk9aIS5lXPOl/qbc3IMnU/y4gYivxSRZg8d37DTpTp5Gc5CruJwdRbML3WwEBIYWajg==
 
 match-sorter@^6.0.2:
   version "6.3.1"

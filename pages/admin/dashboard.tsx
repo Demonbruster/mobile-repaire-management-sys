@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useMediaQuery } from '@mantine/hooks';
-import { ActionIcon, AppShell, Flex, Header, Text, Box } from '@mantine/core'
+import { ActionIcon, AppShell, Flex, Header, Text, Box, Skeleton } from '@mantine/core'
 import { IconUsers, IconDeviceMobile, IconDeviceMobileVibration } from '@tabler/icons-react'
-import { sizes } from '../../constants/constant';
-import DataTable from '../../components/container/DataTable';
+import { DataTable } from 'mantine-datatable';
+
+import { reactQueryKey, sizes } from '../../constants/constant';
 import NewRepairer from '../../components/container/repairer/NewRepairer';
 import NewModel from '../../components/container/model/NewModel';
+import { useQuery } from 'react-query';
+import { getRepairers } from '../../endpoints/repairer';
 
 const size = sizes.FOOTER_ICON_SIZE
+const loadingSize = 300
 
 const Dashboard = () => {
   const isMobile = useMediaQuery('(max-width: 600px)')
@@ -56,12 +60,51 @@ const Dashboard = () => {
         </Box> : <></>
       }
     >
-      <NewModel />
-      <NewRepairer/>
-      <hr />
-      <DataTable/>
+      <RepairerTable/>
     </AppShell>
   )
 }
 
 export default Dashboard
+
+function RepairerTable() {
+  const { isLoading, data, isError, error }  = useQuery(reactQueryKey.repairers, async () => getRepairers())
+
+  const records = useMemo(() => {
+    return data?.repairers?.map((repairer:any) => ({
+      device: repairer.device?.name ,
+      customer: repairer.customer?.phone + ' ' + (repairer.customer.name ? repairer.customer.name : ''),
+      problem: repairer.problem,
+      status: repairer.status
+    }))
+  }, [data])
+
+
+  const columns = [
+    {
+      accessor: 'device',
+    },
+    {
+      accessor: 'customer'
+    },
+    {
+      accessor: 'problem'
+    },
+    {
+      accessor: 'status'
+    }
+  ] 
+
+  if(isLoading) return <Skeleton height={loadingSize} />
+
+  return <DataTable 
+    columns={columns} 
+    records={records}
+    striped
+    highlightOnHover 
+    key={
+      records?.map((record:any) => record.device + record.customer + record.problem + record.status).join('')
+    }
+  />
+
+}
