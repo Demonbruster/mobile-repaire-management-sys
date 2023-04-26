@@ -64,7 +64,7 @@ export default function NewRepairer() {
   const deviceModal = (value: string) => modals.open({
     title: 'Create Device',
     children: (
-      <DeviceModalChild value={value}   />
+      <DeviceModalChild value={value} />
     ),
   })
 
@@ -128,26 +128,30 @@ export default function NewRepairer() {
   }, [repairerMutation.isError])
 
   const CustomerModalChild = ({ value, onSubmit }: { value: string; onSubmit: (values: ICustomer_FE) => void }) => {
-    const [customerValue, setCustomerValue] = useState<string>(value)
+    const customerForm = useForm({
+      initialValues: {
+        phone: value,
+        name: '',
+      },
+    })
+
+    const handleOnSubmit = useCallback((values: ICustomer_FE) => {
+      onSubmit(values)
+    }, [onSubmit])
 
     return (
       <Flex justify='center' align='center' gap='sm'>
-        <TextInput label='Phone' placeholder='Phone' value={customerValue} onChange={(e) => {
-          setCustomerValue(e.currentTarget.value)
-        }} />
-        <Button mt='xl' loading={
-          customerMutation.isLoading
-        } onClick={() => {
-          onSubmit({
-            phone: customerValue,
-          })
-        }}>+</Button>
+        <form onSubmit={customerForm.onSubmit(handleOnSubmit)}>
+          <TextInput label='Phone' placeholder='Phone'  {...customerForm.getInputProps('phone')} />
+          <TextInput label='Name' placeholder='Name'  {...customerForm.getInputProps('name')} />
+          <Button mt='xl' loading={customerMutation.isLoading} type='submit'>Create</Button>
+        </form>
       </Flex>
     )
   }
 
   const DeviceModalChild = ({ value }: { value: string }) => {
-    return <NewDevice name={value} callBack={() => {modals.closeAll()}} />
+    return <NewDevice name={value} callBack={() => { modals.closeAll() }} />
   }
 
   return (

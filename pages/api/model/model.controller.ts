@@ -16,8 +16,10 @@ async function getModels(req: NextApiRequest, res: NextApiResponse) {
 	// get all models
 	try {
 		const models = await model.find({}).populate("brand");
+		console.log({models});
 		return res.status(200).json({ success: true, data: models });
 	} catch (err) {
+		console.log(err);
 		return res.status(400).json(err);
 	}
 }

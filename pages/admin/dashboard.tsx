@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
-import { useDebouncedValue, useMediaQuery } from '@mantine/hooks';
-import { ActionIcon, AppShell, Flex, Text, Box, Skeleton, Card, Title, Grid, Group, TextInput, Button, Stack } from '@mantine/core'
+import { useDebouncedValue, useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { ActionIcon, AppShell, Flex, Text, Box, Skeleton, Card, Title, Grid, Group, TextInput, Button, Stack, Collapse } from '@mantine/core'
 import { IconUsers, IconDeviceMobile, IconDeviceMobileVibration, IconSearch, IconCaretDown, IconCaretUp } from '@tabler/icons-react'
 import { DataTable } from 'mantine-datatable';
 
@@ -72,6 +72,7 @@ function RepairerTable() {
   const [isNewRepairerOpen, setIsNewRepairerOpen] = useState(false)
   const [query, setQuery] = useState('');
   const [debouncedQuery] = useDebouncedValue(query, 200);
+  const [opened, { toggle }] = useDisclosure(false);
 
   const records = useMemo(() => {
     const tunedData = data?.repairers?.map((repairer: any) => ({
@@ -111,7 +112,7 @@ function RepairerTable() {
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder p='lg'>
       <Stack>
-        <Grid align="center" mb="md">
+        <Grid align="center">
           <Grid.Col span={6}>
             <Title order={3} mb={5}>Repairers</Title>
           </Grid.Col>
@@ -129,7 +130,10 @@ function RepairerTable() {
                   leftIcon={
                     isNewRepairerOpen ? <IconCaretUp size={16} /> : <IconCaretDown size={16} />
                   }
-                  onClick={() => setIsNewRepairerOpen((prev) => !prev)}
+                  onClick={() => {
+                    setIsNewRepairerOpen((prev) => !prev)
+                    toggle()
+                  }}
                 >
                   {isNewRepairerOpen ? 'Close' : 'New'}
                 </Button>
@@ -137,11 +141,11 @@ function RepairerTable() {
             </Group>
           </Grid.Col>
         </Grid>
-        {isNewRepairerOpen &&
+        <Collapse in={opened}>
           <Card withBorder >
             <NewRepairer />
           </Card>
-        }
+        </Collapse>
         <DataTable
           minHeight={loadingSize}
           columns={columns}
