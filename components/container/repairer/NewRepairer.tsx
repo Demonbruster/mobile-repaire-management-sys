@@ -21,7 +21,6 @@ export default function NewRepairer() {
 
   const repairerMutation = useMutation(async (value: IRepairer_FE) => await createRepairer(value), {
     onSuccess() {
-      console.log('success')
       return queryClient.invalidateQueries({ queryKey: [reactQueryKey.repairers.toString(), reactQueryKey.customers, reactQueryKey.devices] })
     },
   })
