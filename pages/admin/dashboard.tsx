@@ -67,7 +67,7 @@ const Dashboard = () => {
 export default Dashboard
 
 function RepairerTable() {
-  const { isLoading, data, isError, error } = useQuery(reactQueryKey.repairers, async () => getRepairers())
+  const { isLoading, data, isError, error } = useQuery({ queryKey: [reactQueryKey.repairers.toString()], queryFn: async () => await getRepairers() })
 
   const [isNewRepairerOpen, setIsNewRepairerOpen] = useState(false)
   const [query, setQuery] = useState('');

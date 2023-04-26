@@ -19,15 +19,16 @@ export default function NewRepairer() {
   const customerQuery = useQuery(reactQueryKey.customers, async () => getCustomers())
   const deviceQuery = useQuery(reactQueryKey.devices, async () => getDevices())
 
-  const repairerMutation = useMutation((value: IRepairer_FE) => createRepairer(value), {
+  const repairerMutation = useMutation(async (value: IRepairer_FE) => await createRepairer(value), {
     onSuccess() {
-      queryClient.invalidateQueries([reactQueryKey.repairers, reactQueryKey.customers, reactQueryKey.devices])
+      console.log('success')
+      return queryClient.invalidateQueries({ queryKey: [reactQueryKey.repairers.toString(), reactQueryKey.customers, reactQueryKey.devices] })
     },
   })
 
-  const customerMutation = useMutation((value: ICustomer_FE) => createCustomer(value), {
+  const customerMutation = useMutation(async (value: ICustomer_FE) => await createCustomer(value), {
     onSuccess() {
-      queryClient.invalidateQueries([reactQueryKey.customers])
+      return queryClient.invalidateQueries({ queryKey: [reactQueryKey.customers] })
     },
   })
 
@@ -53,7 +54,7 @@ export default function NewRepairer() {
       customer: (value) => {
         if (!value || value === '') return 'Customer is required'
       },
-      device : (value) => {
+      device: (value) => {
         if (!value || value === '') return 'Device is required'
       }
     },
