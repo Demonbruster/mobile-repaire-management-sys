@@ -11,7 +11,12 @@ import { createModel, IModel_FE } from '../../../endpoints/model'
 import showNotification from '../../../utils/notifications'
 import queryClient from '../../../utils/queryClinet'
 
-function NewModel() {
+interface IProps {
+  callBack?: () => void
+  modalName?: string
+}
+
+function NewModel({ callBack, modalName }: IProps) {
   const { data, isLoading, error, isError } = useQuery(IReactQueryKey.brands, getBrands)
 
   const modelMutation = useMutation((value: IModel_FE) => createModel(value), {
@@ -22,20 +27,24 @@ function NewModel() {
 
   const form = useForm({
     initialValues: {
-      name: '',
+      name: modalName || '',
       brand: '',
     },
     validate: {
       name: (value) => {
-        if (!value) return 'Name is required'
+        if (!value || value === '') return 'Name is required'
       },
       brand: (value) => {
-        if (!value) return 'Brand is required'
+        if (!value || value === '') return 'Brand is required'
       }
     }
   })
 
-  const onSubmit = (values: IModel_FE) => {
+  useEffect(() => {
+    form.setFieldValue('name', modalName || '')
+  }, [modalName])
+
+  const HandleOnSubmit = (values: IModel_FE) => {
     modelMutation.mutateAsync(values)
   }
 
@@ -47,7 +56,7 @@ function NewModel() {
         message: 'Model created successfully.',
         type: 'success',
       })
-
+      callBack && callBack()
     }
   }, [modelMutation.isSuccess])
 
@@ -68,7 +77,7 @@ function NewModel() {
   return (
     <Box p='sm'>
       <Text fz='lg' fw='bold'> Create new model </Text>
-      <form onSubmit={form.onSubmit(onSubmit)}>
+      <form onSubmit={form.onSubmit(HandleOnSubmit)}>
         <Box mb='md'>
           <TextInput required label='Name' placeholder='Name' {...form.getInputProps('name')} />
           <Select required label='Brand' placeholder='Brand' {...form.getInputProps('brand')}

@@ -19,15 +19,15 @@ export default function NewRepairer() {
   const customerQuery = useQuery(reactQueryKey.customers, async () => getCustomers())
   const deviceQuery = useQuery(reactQueryKey.devices, async () => getDevices())
 
-  const repairerMutation = useMutation((value: IRepairer_FE) => createRepairer(value), {
+  const repairerMutation = useMutation(async (value: IRepairer_FE) => await createRepairer(value), {
     onSuccess() {
-      queryClient.invalidateQueries([reactQueryKey.repairer, reactQueryKey.customers, reactQueryKey.devices])
+      return queryClient.invalidateQueries({ queryKey: [reactQueryKey.repairers.toString(), reactQueryKey.customers, reactQueryKey.devices] })
     },
   })
 
-  const customerMutation = useMutation((value: ICustomer_FE) => createCustomer(value), {
+  const customerMutation = useMutation(async (value: ICustomer_FE) => await createCustomer(value), {
     onSuccess() {
-      queryClient.invalidateQueries([reactQueryKey.customers])
+      return queryClient.invalidateQueries({ queryKey: [reactQueryKey.customers] })
     },
   })
 
@@ -50,6 +50,12 @@ export default function NewRepairer() {
 
         if (entryDateToTotalSecs > expectedDeliveryDateToTotalSecs) return 'Expected Delivery Date can not be less than Entry Date'
       },
+      customer: (value) => {
+        if (!value || value === '') return 'Customer is required'
+      },
+      device: (value) => {
+        if (!value || value === '') return 'Device is required'
+      }
     },
     validateInputOnChange: ['expectedDeliveryDate']
   })
@@ -64,7 +70,7 @@ export default function NewRepairer() {
   const deviceModal = (value: string) => modals.open({
     title: 'Create Device',
     children: (
-      <DeviceModalChild value={value}   />
+      <DeviceModalChild value={value} />
     ),
   })
 
@@ -128,26 +134,30 @@ export default function NewRepairer() {
   }, [repairerMutation.isError])
 
   const CustomerModalChild = ({ value, onSubmit }: { value: string; onSubmit: (values: ICustomer_FE) => void }) => {
-    const [customerValue, setCustomerValue] = useState<string>(value)
+    const customerForm = useForm({
+      initialValues: {
+        phone: value,
+        name: '',
+      },
+    })
+
+    const handleOnSubmit = useCallback((values: ICustomer_FE) => {
+      onSubmit(values)
+    }, [onSubmit])
 
     return (
       <Flex justify='center' align='center' gap='sm'>
-        <TextInput label='Phone' placeholder='Phone' value={customerValue} onChange={(e) => {
-          setCustomerValue(e.currentTarget.value)
-        }} />
-        <Button mt='xl' loading={
-          customerMutation.isLoading
-        } onClick={() => {
-          onSubmit({
-            phone: customerValue,
-          })
-        }}>+</Button>
+        <form onSubmit={customerForm.onSubmit(handleOnSubmit)}>
+          <TextInput label='Phone' placeholder='Phone'  {...customerForm.getInputProps('phone')} />
+          <TextInput label='Name' placeholder='Name'  {...customerForm.getInputProps('name')} />
+          <Button mt='xl' loading={customerMutation.isLoading} type='submit'>Create</Button>
+        </form>
       </Flex>
     )
   }
 
   const DeviceModalChild = ({ value }: { value: string }) => {
-    return <NewDevice name={value} callBack={() => {modals.closeAll()}} />
+    return <NewDevice name={value} callBack={() => { modals.closeAll() }} />
   }
 
   return (

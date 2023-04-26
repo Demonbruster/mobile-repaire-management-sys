@@ -2859,10 +2859,10 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-mantine-datatable@^1.7.39:
-  version "1.7.39"
-  resolved "https://registry.yarnpkg.com/mantine-datatable/-/mantine-datatable-1.7.39.tgz#eccfd727f91205bc0c3884b18c8a62ac8ca2fddd"
-  integrity sha512-MO7ka3bmvbAY69HZOw0E94tg4tJDSIH2hmKxKnByxvw62Y27yzc6aaX9IyvjSBquYdQnxKwTNAfgFq2674M11g==
+mantine-datatable@^2.4.12:
+  version "2.4.12"
+  resolved "https://registry.yarnpkg.com/mantine-datatable/-/mantine-datatable-2.4.12.tgz#52caad02a7adb85a4a861b37ea8a2e856cf6b847"
+  integrity sha512-g7XIssQmYxyuQ7i5cc1wk9aIS5lXPOl/qbc3IMnU/y4gYivxSRZg8d37DTpTp5Gc5CruJwdRbML3WwEBIYWajg==
 
 match-sorter@^6.0.2:
   version "6.3.1"
@@ -3258,10 +3258,10 @@ react-is@^16.13.1, react-is@^16.7.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-query@^3.39.2:
-  version "3.39.2"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.39.2.tgz#9224140f0296f01e9664b78ed6e4f69a0cc9216f"
-  integrity sha512-F6hYDKyNgDQfQOuR1Rsp3VRzJnWHx6aRnnIZHMNGGgbL3SBgpZTDg8MQwmxOgpCAoqZJA+JSNCydF1xGJqKOCA==
+react-query@^3.39.3:
+  version "3.39.3"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.39.3.tgz#4cea7127c6c26bdea2de5fb63e51044330b03f35"
+  integrity sha512-nLfLz7GiohKTJDuT4us4X3h/8unOh+00MLb2yJoGTPjxKs2bc1iDhkNx2bd5MKklXnOD3NrVZ+J2UXujA5In4g==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
