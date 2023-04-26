@@ -21,7 +21,7 @@ export default function NewRepairer() {
 
   const repairerMutation = useMutation((value: IRepairer_FE) => createRepairer(value), {
     onSuccess() {
-      queryClient.invalidateQueries([reactQueryKey.repairer, reactQueryKey.customers, reactQueryKey.devices])
+      queryClient.invalidateQueries([reactQueryKey.repairers, reactQueryKey.customers, reactQueryKey.devices])
     },
   })
 
@@ -50,6 +50,12 @@ export default function NewRepairer() {
 
         if (entryDateToTotalSecs > expectedDeliveryDateToTotalSecs) return 'Expected Delivery Date can not be less than Entry Date'
       },
+      customer: (value) => {
+        if (!value || value === '') return 'Customer is required'
+      },
+      device : (value) => {
+        if (!value || value === '') return 'Device is required'
+      }
     },
     validateInputOnChange: ['expectedDeliveryDate']
   })
