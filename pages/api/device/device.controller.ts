@@ -8,6 +8,7 @@ async function getDevices(res: NextApiResponse) {
 		const devices = await deviceModel.find({}).populate("owner").populate("model");
 		return res.status(200).json({ success: true, data: devices });
 	} catch (err) {
+		console.log(err);
 		return res.status(400).json(err);
 	}
 }

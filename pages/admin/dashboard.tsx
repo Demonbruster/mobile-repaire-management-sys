@@ -77,7 +77,7 @@ function RepairerTable() {
   const records = useMemo(() => {
     const tunedData = data?.repairers?.map((repairer: any) => ({
       device: repairer.device?.name,
-      customer: repairer.customer?.phone + ' ' + (repairer.customer.name ? repairer.customer.name : ''),
+      customer: repairer.customer?.phone + ' ' + (repairer.customer?.name ? repairer.customer.name : ''),
       problem: repairer.problem,
       status: repairer.status
     }))

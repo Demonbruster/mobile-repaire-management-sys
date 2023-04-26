@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
 import { useForm } from '@mantine/form'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { IReactQueryKey } from '../../../constants/types'
 import { Box, Text, TextInput, Select, Button } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react';
@@ -9,7 +9,6 @@ import { IconChevronDown } from '@tabler/icons-react';
 import { getBrands } from '../../../endpoints/brand'
 import { createModel, IModel_FE } from '../../../endpoints/model'
 import showNotification from '../../../utils/notifications'
-import queryClient from '../../../utils/queryClinet'
 
 interface IProps {
   callBack?: () => void
@@ -17,6 +16,7 @@ interface IProps {
 }
 
 function NewModel({ callBack, modalName }: IProps) {
+  const queryClient = useQueryClient()
   const { data, isLoading, error, isError } = useQuery(IReactQueryKey.brands, getBrands)
 
   const modelMutation = useMutation((value: IModel_FE) => createModel(value), {

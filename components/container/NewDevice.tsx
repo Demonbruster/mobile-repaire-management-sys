@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { Box, Text, TextInput, Select, Flex, Button, Title, Collapse } from '@mantine/core'
 import { useForm } from '@mantine/form';
 
 import { reactQueryKey } from '../../constants/constant'
 import { getModels } from '../../endpoints/model';
 import { createDevice, IDevice_FE } from '../../endpoints/device';
-import queryClient from '../../utils/queryClinet';
 import showNotification from '../../utils/notifications';
 import { IconChevronDown } from '@tabler/icons-react';
 import { getCustomers } from '../../endpoints/customers';
@@ -19,6 +18,7 @@ interface IProps {
 }
 
 function NewDevice({ name = '', callBack = () => { } }: IProps) {
+  const queryClient = useQueryClient()
   const [isCollapseOpen, { toggle }] = useDisclosure(false);
   const [modalName, setModalName] = useState('')
 

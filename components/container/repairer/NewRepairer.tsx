@@ -2,22 +2,22 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { useForm } from '@mantine/form'
 import { Box, Button, Flex, Group, Select, Text, TextInput } from '@mantine/core'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { IconChevronDown } from '@tabler/icons-react'
 
 import { ICustomer_FE, createCustomer, getCustomers } from '../../../endpoints/customers'
 import { reactQueryKey } from '../../../constants/constant'
 import { getDevices } from '../../../endpoints/device'
 import { IRepairer_FE, createRepairer } from '../../../endpoints/repairer'
-import queryClient from '../../../utils/queryClinet'
 import DatePickerModal from '../../common/DatePickerModal/DatePickerModal'
 import showNotification from '../../../utils/notifications'
 import { modals } from '@mantine/modals'
 import NewDevice from '../NewDevice'
 
 export default function NewRepairer() {
-  const customerQuery = useQuery(reactQueryKey.customers, async () => getCustomers())
-  const deviceQuery = useQuery(reactQueryKey.devices, async () => getDevices())
+  const queryClient = useQueryClient()
+  const customerQuery = useQuery(reactQueryKey.customers, async () => await getCustomers())
+  const deviceQuery = useQuery(reactQueryKey.devices, async () => await getDevices())
 
   const repairerMutation = useMutation(async (value: IRepairer_FE) => await createRepairer(value), {
     onSuccess() {
