@@ -1,7 +1,7 @@
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 import type { AppProps } from 'next/app'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';

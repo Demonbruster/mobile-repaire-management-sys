@@ -6,7 +6,7 @@ import { DataTable } from 'mantine-datatable';
 
 import { reactQueryKey, sizes } from '../../constants/constant';
 import NewRepairer from '../../components/container/repairer/NewRepairer';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getRepairers } from '../../endpoints/repairer';
 
 const size = sizes.FOOTER_ICON_SIZE
@@ -67,7 +67,7 @@ const Dashboard = () => {
 export default Dashboard
 
 function RepairerTable() {
-  const { isLoading, data, isError, error } = useQuery({ queryKey: [reactQueryKey.repairers.toString()], queryFn: async () => await getRepairers() })
+  const { isLoading, data, isError, error } = useQuery({ queryKey: [reactQueryKey.repairers], queryFn:getRepairers, refetchInterval : 1000 })
 
   const [isNewRepairerOpen, setIsNewRepairerOpen] = useState(false)
   const [query, setQuery] = useState('');

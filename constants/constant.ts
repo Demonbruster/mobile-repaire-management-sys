@@ -7,7 +7,7 @@ export const reactQueryKey = {
   repairer : 'REPAIRER',
   customers : 'CUSTOMERS',
   login : 'LOGIN',
-} as const;
+};
 
 export const sizes = {
   FOOTER_ICON_SIZE : 34,

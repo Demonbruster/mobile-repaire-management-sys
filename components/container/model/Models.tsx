@@ -1,11 +1,11 @@
 import React from 'react'
 import { Box, Text } from '@mantine/core'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { reactQueryKey } from '../../../constants/constant'
 import { getModels } from '../../../endpoints/model'
 
 function Models() {
-  const { isLoading, data, isError, error } = useQuery(reactQueryKey.models, async () => getModels())
+  const { isLoading, data, isError, error } = useQuery({ queryKey: [reactQueryKey.models], queryFn: async () => await getModels() })
 
   if (isLoading) {
     return <div>Loading...</div>

@@ -2,7 +2,7 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { useForm } from '@mantine/form'
 import { Box, Button, Flex, Group, Select, Text, TextInput } from '@mantine/core'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { IconChevronDown } from '@tabler/icons-react'
 
 import { ICustomer_FE, createCustomer, getCustomers } from '../../../endpoints/customers'
@@ -16,8 +16,8 @@ import NewDevice from '../NewDevice'
 
 export default function NewRepairer() {
   const queryClient = useQueryClient()
-  const customerQuery = useQuery(reactQueryKey.customers, async () => await getCustomers())
-  const deviceQuery = useQuery(reactQueryKey.devices, async () => await getDevices())
+  const customerQuery = useQuery({queryKey: [reactQueryKey.customers], queryFn: async () => await getCustomers()})
+  const deviceQuery = useQuery({queryKey:[reactQueryKey.devices],queryFn: async () => await getDevices()})
 
   const repairerMutation = useMutation(async (value: IRepairer_FE) => await createRepairer(value), {
     onSuccess() {

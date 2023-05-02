@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Box, Text, TextInput, Select, Flex, Button, Title, Collapse } from '@mantine/core'
 import { useForm } from '@mantine/form';
 
@@ -22,11 +22,11 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
   const [isCollapseOpen, { toggle }] = useDisclosure(false);
   const [modalName, setModalName] = useState('')
 
-  const modelQuery = useQuery(reactQueryKey.models, async () => getModels())
-  const ownerQuery = useQuery(reactQueryKey.customers, async () => getCustomers())
-  const deviceMutation = useMutation((value: IDevice_FE) => createDevice(value), {
+  const modelQuery = useQuery({ queryKey: [reactQueryKey.models], queryFn: async () => await getModels() })
+  const ownerQuery = useQuery({ queryKey: [reactQueryKey.customers], queryFn: async () => await getCustomers() })
+  const deviceMutation = useMutation(async (value: IDevice_FE) => await createDevice(value), {
     onSuccess() {
-      queryClient.invalidateQueries([reactQueryKey.devices, reactQueryKey.customers])
+      return queryClient.invalidateQueries({ queryKey: [reactQueryKey.devices, reactQueryKey.customers] })
     },
   })
 
@@ -38,7 +38,7 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
       color: '',
       owner: '',
     },
-    validate:{
+    validate: {
       model: (value) => {
         if (!value || value === '') return 'Model is required'
       },

@@ -33,13 +33,3 @@ export interface IRepairer extends IDevice {
   expectedDeliveryDate?: Date;
   deliveryDate?: Date;
 }
-
-export const IReactQueryKey = {
-  devices : 'DEVICES',
-  device : 'DEVICE',
-  brands : 'BRANDS',
-  models : 'MODELS',
-  repairers : 'REPAIRERS',
-  repairer : 'REPAIRER',
-  customers : 'CUSTOMERS',
-}
