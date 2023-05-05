@@ -2,12 +2,13 @@
 import React, { useEffect } from 'react'
 import { useForm } from '@mantine/form'
 import { Box, Text, TextInput, Button, Flex } from '@mantine/core'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createBrand } from '../../../endpoints/brand'
-import { IBrand, IReactQueryKey } from '../../../constants/types'
-import queryClient from '../../../utils/queryClinet'
+import { IBrand } from '../../../constants/types'
+import { reactQueryKey } from '../../../constants/constant'
 
 const NewBrand = () => {
+  const queryClient = useQueryClient()
   const form = useForm({
     initialValues: {
       name: '',
@@ -21,7 +22,9 @@ const NewBrand = () => {
 
   const { isError, isLoading, isSuccess, mutateAsync, error } = useMutation((data: IBrand) => createBrand(data), {
     onSuccess() {
-      queryClient.invalidateQueries([IReactQueryKey.brands])
+      queryClient.invalidateQueries({
+        queryKey: [reactQueryKey.brands]
+      })
     },
   })
 

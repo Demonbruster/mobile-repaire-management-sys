@@ -3,11 +3,12 @@ import { useDebouncedValue, useDisclosure, useMediaQuery } from '@mantine/hooks'
 import { ActionIcon, AppShell, Flex, Text, Box, Skeleton, Card, Title, Grid, Group, TextInput, Button, Stack, Collapse } from '@mantine/core'
 import { IconUsers, IconDeviceMobile, IconDeviceMobileVibration, IconSearch, IconCaretDown, IconCaretUp } from '@tabler/icons-react'
 import { DataTable } from 'mantine-datatable';
+import { useQuery } from '@tanstack/react-query';
 
 import { reactQueryKey, sizes } from '../../constants/constant';
 import NewRepairer from '../../components/container/repairer/NewRepairer';
-import { useQuery } from '@tanstack/react-query';
 import { getRepairers } from '../../endpoints/repairer';
+import { useRouter } from 'next/router';
 
 const size = sizes.FOOTER_ICON_SIZE
 const loadingSize = 300
@@ -67,7 +68,13 @@ const Dashboard = () => {
 export default Dashboard
 
 function RepairerTable() {
-  const { isLoading, data, isError, error } = useQuery({ queryKey: [reactQueryKey.repairers], queryFn:getRepairers, refetchInterval : 1000 })
+  const router = useRouter()
+  
+  const { isLoading, data, isError, error } = useQuery({ 
+    queryKey: [reactQueryKey.repairers], 
+    queryFn:getRepairers, 
+    // refetchInterval : 1000
+   })
 
   const [isNewRepairerOpen, setIsNewRepairerOpen] = useState(false)
   const [query, setQuery] = useState('');
@@ -79,7 +86,8 @@ function RepairerTable() {
       device: repairer.device?.name,
       customer: repairer.customer?.phone + ' ' + (repairer.customer?.name ? repairer.customer.name : ''),
       problem: repairer.problem,
-      status: repairer.status
+      status: repairer.status,
+      id: repairer._id
     }))
 
     if (!debouncedQuery) return tunedData;
@@ -150,6 +158,9 @@ function RepairerTable() {
           minHeight={loadingSize}
           columns={columns}
           records={records}
+          onRowClick={( data: {id : string}, rowIndex, event ) => {
+            router.push(`/admin/repairer/${data.id}`)
+          }}
           striped
           highlightOnHover
           key={

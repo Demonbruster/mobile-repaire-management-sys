@@ -6,9 +6,9 @@ import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
 
-const queryClient = new QueryClient()
-
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+  const queryClient = new QueryClient()
+
   return (
     <QueryClientProvider client={queryClient}>
       <MantineProvider withNormalizeCSS withGlobalStyles>

@@ -1,11 +1,11 @@
 import React from 'react'
 import { Box, Text } from '@mantine/core'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { reactQueryKey } from '../../../constants/constant'
 import { getBrands } from '../../../endpoints/brand'
 
 const Brands = () => {
-  const { isLoading, data, isError, error } = useQuery(reactQueryKey.brands, async () => getBrands())
+  const { isLoading, data, isError, error } = useQuery({ queryKey: [reactQueryKey.brands], queryFn: async () => await getBrands() })
 
   if (isLoading) {
     return <div>Loading...</div>

@@ -7,7 +7,7 @@ import {
   Container,
   Button,
 } from '@mantine/core';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from '@mantine/form';
 import * as Yup from 'yup';
 
@@ -27,14 +27,16 @@ type IInitialValues = {
 }
 
 
-
 export default function Page() {
   const router = useRouter();
 
-  const { isLoading, mutateAsync, error, isSuccess } = useMutation(reactQueryKey.login, (va: IInitialValues) => {
-    return axios.post('/login', {
+  const { isLoading, mutateAsync, error, isSuccess } = useMutation({
+    mutationKey: [reactQueryKey.login], mutationFn: async (va: IInitialValues) => await axios.post('/login', {
       ...va,
+    }).catch((error) => {
+      throw error;
     })
+
   })
 
   const initialValues: IInitialValues = {
