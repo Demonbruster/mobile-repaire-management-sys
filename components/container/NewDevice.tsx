@@ -33,13 +33,13 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
   const form = useForm({
     initialValues: {
       name,
-      model: '',
+      modelId: '',
       imei: '',
       color: '',
-      owner: '',
+      customerId: '',
     },
     validate: {
-      model: (value) => {
+      modelId: (value) => {
         if (!value || value === '') return 'Model is required'
       },
     }
@@ -105,7 +105,7 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
                 creatable
                 getCreateLabel={(value) => `+ modal: "${value}"`}
                 rightSection={<IconChevronDown size="1rem" />}
-                rightSectionWidth={30} label='Model' placeholder='Model' {...form.getInputProps('model')}
+                rightSectionWidth={30} label='Model' placeholder='Model' {...form.getInputProps('modelId')}
                 onCreate={(value) => {
                   setModalName(value)
                   toggle();
@@ -117,7 +117,7 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
               <Select searchable
                 nothingFound="No options"
                 rightSection={<IconChevronDown size="1rem" />}
-                rightSectionWidth={30} label='Owner Phone' placeholder='Owner Phone' {...form.getInputProps('owner')}
+                rightSectionWidth={30} label='Owner Phone' placeholder='Owner Phone' {...form.getInputProps('customerId')}
                 data={listOfOwner} />
             </Flex>
             <Flex mt='md' justify='center' direction='row' gap='md'>

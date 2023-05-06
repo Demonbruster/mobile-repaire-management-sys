@@ -12,6 +12,7 @@ export const reactQueryKey = {
 export const sizes = {
   FOOTER_ICON_SIZE : 34,
 	PAGE_SIZE: 15,
+	MIN_TABLE_HEIGHT: 300,
 }
 
 export const defaultBrands = [

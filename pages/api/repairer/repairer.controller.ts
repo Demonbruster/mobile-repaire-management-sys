@@ -28,7 +28,7 @@ async function getRepairerById(req: NextApiRequest, res: NextApiResponse) {
 			return getRepairerByDeviceId(req, res, id.toString().split("/")[1]);
 		}
 
-		const repairer = await repairerModel.findById(id.toString());
+		const repairer = await repairerModel.findById(id.toString()).populate("customer").populate("device");
 		return res.status(200).json({ success: true, repairer: repairer });
 	} catch (err) {
 		return res.status(400).json(err);

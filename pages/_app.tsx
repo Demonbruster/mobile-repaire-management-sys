@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
+import Wrapper from '../components/container/Wrapper';
 
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const queryClient = new QueryClient()
@@ -14,7 +15,9 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
       <MantineProvider withNormalizeCSS withGlobalStyles>
         <ModalsProvider >
           <Notifications />
-          <Component {...pageProps} />
+          <Wrapper>
+            <Component {...pageProps} />
+          </Wrapper>
         </ModalsProvider>
       </MantineProvider>
     </QueryClientProvider>
