@@ -76,7 +76,6 @@ function NewModel({ callBack, modalName }: IProps) {
 
   return (
     <Box p='sm'>
-      <Text fz='lg' fw='bold'> Create new model </Text>
       <form onSubmit={form.onSubmit(HandleOnSubmit)}>
         <Box mb='md'>
           <TextInput required label='Name' placeholder='Name' {...form.getInputProps('name')} />
