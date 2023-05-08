@@ -1,15 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
 import { useForm } from '@mantine/form'
-import { useMutation, useQuery } from 'react-query'
-import { IReactQueryKey } from '../../../constants/types'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Box, Text, TextInput, Select, Button } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react';
 
 import { getBrands } from '../../../endpoints/brand'
 import { createModel, IModel_FE } from '../../../endpoints/model'
 import showNotification from '../../../utils/notifications'
-import queryClient from '../../../utils/queryClinet'
+import { reactQueryKey } from '../../../constants/constant';
 
 interface IProps {
   callBack?: () => void
@@ -17,11 +16,12 @@ interface IProps {
 }
 
 function NewModel({ callBack, modalName }: IProps) {
-  const { data, isLoading, error, isError } = useQuery(IReactQueryKey.brands, getBrands)
+  const queryClient = useQueryClient()
+  const { data, isLoading, error, isError } = useQuery({ queryKey: [reactQueryKey.brands], queryFn: async () => await getBrands() })
 
-  const modelMutation = useMutation((value: IModel_FE) => createModel(value), {
+  const modelMutation = useMutation(async (value: IModel_FE) => await createModel(value), {
     onSuccess(data) {
-      queryClient.invalidateQueries([IReactQueryKey.models, data.brandId])
+      queryClient.invalidateQueries({ queryKey: [reactQueryKey.models] })
     },
   })
 
@@ -76,7 +76,6 @@ function NewModel({ callBack, modalName }: IProps) {
 
   return (
     <Box p='sm'>
-      <Text fz='lg' fw='bold'> Create new model </Text>
       <form onSubmit={form.onSubmit(HandleOnSubmit)}>
         <Box mb='md'>
           <TextInput required label='Name' placeholder='Name' {...form.getInputProps('name')} />

@@ -27,6 +27,14 @@ export const getRepairer = async (id: string) =>
 			throw err;
 		});
 
+export const getRepairerByCustomerPhone = async (customerphone: string) =>
+	axios
+		.get(`${url_path.repairer}?customerphone=${customerphone}`)
+		.then((res) => res.data)
+		.catch((err) => {
+			throw err;
+		});
+
 export const createRepairer = async (data: IRepairer_FE) =>
 	axios
 		.post(url_path.repairer, data)
@@ -38,6 +46,14 @@ export const createRepairer = async (data: IRepairer_FE) =>
 export const updateRepairer = async (id: string, data: IRepairer_FE) =>
 	axios
 		.put(`${url_path.repairer}/${id}`, data)
+		.then((res) => res.data)
+		.catch((err) => {
+			throw err;
+		});
+
+export const updateStatusRepairer = async (id: string, status: string) =>
+	axios
+		.put(`${url_path.repairer}/${id}`, { status })
 		.then((res) => res.data)
 		.catch((err) => {
 			throw err;

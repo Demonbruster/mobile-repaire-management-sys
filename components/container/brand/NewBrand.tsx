@@ -1,13 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useForm } from '@mantine/form'
 import { Box, Text, TextInput, Button, Flex } from '@mantine/core'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createBrand } from '../../../endpoints/brand'
-import { IBrand, IReactQueryKey } from '../../../constants/types'
-import queryClient from '../../../utils/queryClinet'
+import { IBrand } from '../../../constants/types'
+import { reactQueryKey } from '../../../constants/constant'
 
-const NewBrand = () => {
+interface IProps {
+  onSuccess?: () => void
+  onClose?: () => void
+}
+
+const NewBrand = ({ onClose, onSuccess }:IProps) => {
+  const queryClient = useQueryClient()
   const form = useForm({
     initialValues: {
       name: '',
@@ -21,7 +27,9 @@ const NewBrand = () => {
 
   const { isError, isLoading, isSuccess, mutateAsync, error } = useMutation((data: IBrand) => createBrand(data), {
     onSuccess() {
-      queryClient.invalidateQueries([IReactQueryKey.brands])
+      queryClient.invalidateQueries({
+        queryKey: [reactQueryKey.brands]
+      })
     },
   })
 
@@ -32,6 +40,7 @@ const NewBrand = () => {
   useEffect(() => {
     if (isSuccess) {
       form.reset()
+      onSuccess && onSuccess()
     }
   }, [isSuccess])
 
@@ -42,9 +51,12 @@ const NewBrand = () => {
     }
   }, [isError])
 
+  const handleClose = useCallback(() => {
+    onClose && onClose()
+  }, [])
+
   return (
     <Box>
-      <Text fz='lg' fw='bold'> Create new brand </Text>
       <form onSubmit={form.onSubmit(onSubmit)}>
         <Box mb='md'>
           <TextInput required label='Name' placeholder='Name' {...form.getInputProps('name')} />
@@ -53,7 +65,7 @@ const NewBrand = () => {
           <Button type='submit' loading={isLoading} size='lg' fullWidth>
             Create
           </Button>
-          <Button type='reset' loading={isLoading} variant='outline' size='lg' fullWidth>
+          <Button type='reset' onClick={handleClose} loading={isLoading} variant='outline' size='lg' fullWidth>
             Reset
           </Button>
         </Flex>

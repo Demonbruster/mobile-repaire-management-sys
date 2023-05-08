@@ -16,7 +16,7 @@ const deviceSchema = new mongoose.Schema({
   color: {
     type: String,
   },
-  owner: {
+  customer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Customer",
   },

@@ -1,16 +1,16 @@
 import React, { useMemo, useState } from 'react'
-import { Box, Button, Flex, Grid, Modal, Stack, Text, TextInput, Title } from '@mantine/core'
-import { useQuery } from '@tanstack/react-query'
-import { reactQueryKey, sizes } from '../../../constants/constant'
-import { getBrands } from '../../../endpoints/brand'
-import { DataTable } from 'mantine-datatable'
-import { useDisclosure } from '@mantine/hooks'
-import { IconSearch } from '@tabler/icons-react'
-import NewBrand from './NewBrand'
+import { DataTable } from 'mantine-datatable';
+import { useQuery } from '@tanstack/react-query';
+import { useDisclosure } from '@mantine/hooks';
+import { IconSearch } from '@tabler/icons-react';
+import { Box, Button, Flex, Grid, Modal, Stack, Text, TextInput, Title } from '@mantine/core';
 
-const Brands = () => {
-  const { isLoading, data, isError, error } = useQuery({ queryKey: [reactQueryKey.brands], queryFn: async () => await getBrands() })
+import { reactQueryKey, sizes } from '../../constants/constant';
+import { getDevices } from '../../endpoints/device';
+import NewDevice from '../../components/container/NewDevice';
 
+function DevicePage() {
+  const { data, isLoading, error } = useQuery({ queryKey: [reactQueryKey.devices], queryFn: getDevices })
   const [query, setQuery] = useState('');
   const [addModalOpen, dispatchAddModal] = useDisclosure(false);
 
@@ -26,24 +26,34 @@ const Brands = () => {
       accessor: 'name'
     },
     {
+      accessor: 'model'
+    },
+    {
+      accessor: 'color'
+    },
+    {
+      accessor: 'customer'
+    },
+    {
       //action
       accessor: 'id',
-      title:'Action',
+      title: 'Action',
       render: (record: any) => (
         <Flex>
           <Button onClick={() => handleDelete(record.id)} variant='outline' size='xs' color='red'>Delete</Button>
         </Flex>
-
       )
     }
   ]
 
   const records = useMemo(() => {
-    const tunedData = data?.data?.map((brand: any) => ({
-      id: brand._id,
-      name: brand.name,
+    const tunedData = data?.data?.map((device: any) => ({
+      id: device._id,
+      name: device.name,
+      model: device.model.name,
+      color: device.color,
+      customer: device.customer.phone + (device.customer.name && ( ' - ' + device.customer.name))
     }))
-
     if (!tunedData) return [];
     if (!query || query === "") return tunedData;
 
@@ -58,22 +68,19 @@ const Brands = () => {
     return <div>Loading...</div>
   }
 
-  if (isError) {
+  if (error) {
     return <div>Error: {JSON.stringify(error)}</div>
   }
 
   return (
     <Box p='sm'>
       <Modal opened={addModalOpen} onClose={dispatchAddModal.close} title={
-        <Title fz={20}>Create new brand</Title>
+        <Title fz={20}>Create new device</Title>
       }>
-        <NewBrand
-          onSuccess={() => { dispatchAddModal.close() }}
-          onClose={() => { dispatchAddModal.close() }}
-        />
+        <NewDevice callBack={() => dispatchAddModal.close()} />
       </Modal>
       <Text fz='lg' fw='bold'>
-        Brands
+        Customers
       </Text>
       <Box mt='md'>
         <Stack>
@@ -88,7 +95,7 @@ const Brands = () => {
               />
             </Grid.Col>
             <Grid.Col md={4} sm={12}>
-              <Button onClick={dispatchAddModal.open} fullWidth variant='filled'>Add new brand</Button>
+              <Button onClick={dispatchAddModal.open} fullWidth variant='filled'>Add new device</Button>
             </Grid.Col>
           </Grid>
           <DataTable
@@ -99,10 +106,9 @@ const Brands = () => {
             minHeight={sizes.MIN_TABLE_HEIGHT}
           />
         </Stack>
-
       </Box>
     </Box>
   )
 }
 
-export default Brands
+export default DevicePage

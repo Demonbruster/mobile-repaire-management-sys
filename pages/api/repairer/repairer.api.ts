@@ -5,6 +5,7 @@ import {
 	getRepairerById,
 	getRepairers,
 	updateRepairer,
+	getRepairerByCustomerPhone,
 } from "./repairer.controller";
 
 export const repairerApi = async (req: NextApiRequest, res: NextApiResponse, withId: boolean) => {
@@ -13,8 +14,14 @@ export const repairerApi = async (req: NextApiRequest, res: NextApiResponse, wit
 
 	switch (method) {
 		case "GET": {
+			// query params	customerphone then getRepairerByCustomerPhone
+			const { customerphone } = req.query as { customerphone: string };
+			if (customerphone) return await getRepairerByCustomerPhone(req, res, customerphone);
+
 			if (withId) return await getRepairerById(req, res);
 			return await getRepairers(req, res);
+
+
 		}
 		case "POST": {
 			if (withId) return res.status(400).json({ success: false });

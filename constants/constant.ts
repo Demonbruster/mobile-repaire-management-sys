@@ -2,17 +2,32 @@ export const reactQueryKey = {
   devices : 'DEVICES',
   device : 'DEVICE',
   brands : 'BRANDS',
+	brand : 'BRAND',
   models : 'MODELS',
+	model : 'MODEL',
   repairers : 'REPAIRERS',
+	otherRepairers : 'OTHER_REPAIRS',
   repairer : 'REPAIRER',
   customers : 'CUSTOMERS',
+	customer: 'CUSTOMER',
   login : 'LOGIN',
-} as const;
+};
 
 export const sizes = {
   FOOTER_ICON_SIZE : 34,
 	PAGE_SIZE: 15,
+	MIN_TABLE_HEIGHT: 300,
 }
+
+// status pending, in-progress, completed, delivered, cancelled, cancelled-delivered 
+export const status = [
+	"pending",
+	"in-progress",
+	"completed",
+	"delivered",
+	"cancelled",
+	"cancelled-delivered",
+]
 
 export const defaultBrands = [
 	"Apple",

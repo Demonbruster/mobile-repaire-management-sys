@@ -24,7 +24,7 @@ async function getBrands(req: NextApiRequest, res: NextApiResponse) {
 async function getBrand(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		const { id } = req.query as { id: string | number };
-		const brandById = await brand.findById(id.toString);
+		const brandById = await brand.findById(id.toString());
 		return res.status(200).json({ success: true, data: brandById });
 	} catch (err) {
 		return res.status(400).json(err);

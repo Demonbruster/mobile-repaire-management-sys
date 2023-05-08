@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Box, Text, TextInput, Select, Flex, Button, Title, Collapse } from '@mantine/core'
 import { useForm } from '@mantine/form';
 
 import { reactQueryKey } from '../../constants/constant'
 import { getModels } from '../../endpoints/model';
 import { createDevice, IDevice_FE } from '../../endpoints/device';
-import queryClient from '../../utils/queryClinet';
 import showNotification from '../../utils/notifications';
 import { IconChevronDown } from '@tabler/icons-react';
 import { getCustomers } from '../../endpoints/customers';
@@ -18,29 +17,33 @@ interface IProps {
   callBack?: () => void
 }
 
-function NewDevice({ name = '', callBack = () => { } }: IProps) {
+function NewDevice({ name = '', callBack}: IProps) {
+  const queryClient = useQueryClient()
   const [isCollapseOpen, { toggle }] = useDisclosure(false);
   const [modalName, setModalName] = useState('')
 
-  const modelQuery = useQuery(reactQueryKey.models, async () => getModels())
-  const ownerQuery = useQuery(reactQueryKey.customers, async () => getCustomers())
-  const deviceMutation = useMutation((value: IDevice_FE) => createDevice(value), {
+  const modelQuery = useQuery({ queryKey: [reactQueryKey.models], queryFn: async () => await getModels() })
+  const ownerQuery = useQuery({ queryKey: [reactQueryKey.customers], queryFn: async () => await getCustomers() })
+  const deviceMutation = useMutation(async (value: IDevice_FE) => await createDevice(value), {
     onSuccess() {
-      queryClient.invalidateQueries([reactQueryKey.devices, reactQueryKey.customers])
+      return queryClient.invalidateQueries({ queryKey: [reactQueryKey.devices] })
     },
   })
 
   const form = useForm({
     initialValues: {
       name,
-      model: '',
+      modelId: '',
       imei: '',
       color: '',
-      owner: '',
+      customerId: '',
     },
-    validate:{
-      model: (value) => {
+    validate: {
+      modelId: (value) => {
         if (!value || value === '') return 'Model is required'
+      },
+      customerId: (value) => {
+        if (!value || value === '') return 'Owner is required'
       },
     }
   })
@@ -61,7 +64,7 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
         message: 'Device created successfully.',
         type: 'success',
       })
-      callBack();
+      callBack && callBack();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deviceMutation.isSuccess])
@@ -96,16 +99,16 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
       </Button>
       <Collapse in={!isCollapseOpen} >
         <Box p='sm'>
-          <Title order={3}>New Device</Title>
           <form onSubmit={form.onSubmit(onSubmit)}>
             <Flex mt='md' direction='column'>
               <TextInput required label='Description' placeholder='Description' {...form.getInputProps('name')} />
               <Select searchable
                 nothingFound="No options"
                 creatable
+                withAsterisk
                 getCreateLabel={(value) => `+ modal: "${value}"`}
                 rightSection={<IconChevronDown size="1rem" />}
-                rightSectionWidth={30} label='Model' placeholder='Model' {...form.getInputProps('model')}
+                rightSectionWidth={30} label='Model' placeholder='Model' {...form.getInputProps('modelId')}
                 onCreate={(value) => {
                   setModalName(value)
                   toggle();
@@ -116,8 +119,9 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
               <TextInput label='Color' placeholder='Color' {...form.getInputProps('color')} />
               <Select searchable
                 nothingFound="No options"
+                withAsterisk
                 rightSection={<IconChevronDown size="1rem" />}
-                rightSectionWidth={30} label='Owner Phone' placeholder='Owner Phone' {...form.getInputProps('owner')}
+                rightSectionWidth={30} label='Owner Phone' placeholder='Owner Phone' {...form.getInputProps('customerId')}
                 data={listOfOwner} />
             </Flex>
             <Flex mt='md' justify='center' direction='row' gap='md'>

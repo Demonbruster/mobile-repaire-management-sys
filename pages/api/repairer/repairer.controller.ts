@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import customerModel from "../customer/customer.model";
 import deviceModel from "../device/device.model";
 import repairerModel from "./repairer.model";
+import {status as constantStatus} from "../../../constants/constant";
 
 async function getRepairers(req: NextApiRequest, res: NextApiResponse) {
 	try {
@@ -28,7 +29,7 @@ async function getRepairerById(req: NextApiRequest, res: NextApiResponse) {
 			return getRepairerByDeviceId(req, res, id.toString().split("/")[1]);
 		}
 
-		const repairer = await repairerModel.findById(id.toString());
+		const repairer = await repairerModel.findById(id.toString()).populate("customer").populate("device");
 		return res.status(200).json({ success: true, repairer: repairer });
 	} catch (err) {
 		return res.status(400).json(err);
@@ -50,7 +51,7 @@ async function getRepairerByCustomerPhone(req: NextApiRequest, res: NextApiRespo
 		if (!customer) {
 			return res.status(400).json({ success: false, message: "Customer not found" });
 		}
-		const repairer = await repairerModel.find({ customer: customer._id });
+		const repairer = await repairerModel.find({ customer: customer._id }).populate("customer").populate("device");
 		return res.status(200).json({ success: true, repairer: repairer });
 	} catch (err) {
 		return res.status(400).json(err);
@@ -70,7 +71,7 @@ async function createRepairer(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		// check device id
 		const { device:deviceId } = req.body as { device: string | number };
-		const device = await deviceModel.findById(deviceId.toString()).populate("owner");
+		const device = await deviceModel.findById(deviceId.toString()).populate("customer");
 		if (!device) {
 			return res.status(400).json({ success: false, message: "Device not found" });
 		}
@@ -94,9 +95,22 @@ async function createRepairer(req: NextApiRequest, res: NextApiResponse) {
 
 async function updateRepairer(req: NextApiRequest, res: NextApiResponse) {
 	// currently not implemented please delete the record and create a new one
+	const { id } = req.query as { id: string | number };
+	const {status} = req.body as { status: string  };
+
+	//update status
+	if(status && constantStatus.includes(status)){
+		const currentRepairer = await repairerModel.findByIdAndUpdate(id.toString(), { status: status }, { new: true });
+		if (currentRepairer) {
+			return res.status(200).json({ success: true, repairer: currentRepairer });
+		}
+		
+		return res.status(400).json({ success: false, message: "Repairer not found" });
+	} 
+
 	return res
 		.status(400)
-		.json({ success: false, message: "Currently not implemented please delete the record and create a new one" });
+		.json({ success: false, message: "Invalid status"});
 }
 
 async function deleteRepairer(req: NextApiRequest, res: NextApiResponse) {

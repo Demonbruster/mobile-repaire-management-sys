@@ -3,10 +3,10 @@ import axios from "../lib/axios";
 
 export interface IDevice_FE {
 	name: string;
-	model: string;
+	modelId: string;
 	imei: string;
 	color: string;
-	owner: string;
+	customerId: string;
 }
 
 export const getDevices = async () => {
