@@ -2,14 +2,14 @@ import React, { useMemo, useState } from 'react'
 import { Box, Button, Flex, Grid, Modal, Stack, Text, TextInput, Title } from '@mantine/core'
 import { useQuery } from '@tanstack/react-query'
 import { reactQueryKey, sizes } from '../../../constants/constant'
-import { getBrands } from '../../../endpoints/brand'
 import { DataTable } from 'mantine-datatable'
 import { useDisclosure } from '@mantine/hooks'
 import { IconSearch } from '@tabler/icons-react'
-import NewBrand from './NewBrand'
+import NewCustomer from './NewCustomer'
+import { getCustomers } from '../../../endpoints/customers'
 
-const Brands = () => {
-  const { isLoading, data, isError, error } = useQuery({ queryKey: [reactQueryKey.brands], queryFn: async () => await getBrands() })
+const Customers = () => {
+  const { isLoading, data, isError, error } = useQuery({ queryKey: [reactQueryKey.customers], queryFn: async () => await getCustomers() })
 
   const [query, setQuery] = useState('');
   const [addModalOpen, dispatchAddModal] = useDisclosure(false);
@@ -26,6 +26,9 @@ const Brands = () => {
       accessor: 'name'
     },
     {
+      accessor: 'phone'
+    },
+    {
       //action
       accessor: 'id',
       title:'Action',
@@ -39,9 +42,10 @@ const Brands = () => {
   ]
 
   const records = useMemo(() => {
-    const tunedData = data?.data?.map((brand: any) => ({
-      id: brand._id,
-      name: brand.name,
+    const tunedData = data?.data?.map((customer: any) => ({
+      id: customer._id,
+      name: customer.name,
+      phone: customer.phone
     }))
 
     if (!tunedData) return [];
@@ -67,13 +71,13 @@ const Brands = () => {
       <Modal opened={addModalOpen} onClose={dispatchAddModal.close} title={
         <Title fz={20}>Create new brand</Title>
       }>
-        <NewBrand
+        <NewCustomer
           onSuccess={() => { dispatchAddModal.close() }}
           onClose={() => { dispatchAddModal.close() }}
         />
       </Modal>
       <Text fz='lg' fw='bold'>
-        Brands
+        Customers
       </Text>
       <Box mt='md'>
         <Stack>
@@ -88,7 +92,7 @@ const Brands = () => {
               />
             </Grid.Col>
             <Grid.Col md={4} sm={12}>
-              <Button onClick={dispatchAddModal.open} fullWidth variant='filled'>Add new brand</Button>
+              <Button onClick={dispatchAddModal.open} fullWidth variant='filled'>Add new customer</Button>
             </Grid.Col>
           </Grid>
           <DataTable
@@ -105,4 +109,4 @@ const Brands = () => {
   )
 }
 
-export default Brands
+export default Customers

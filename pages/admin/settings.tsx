@@ -2,6 +2,7 @@ import React from 'react'
 import { Tabs } from '@mantine/core';
 import Brands from '../../components/container/brand/Brands';
 import Models from '../../components/container/model/Models';
+import Customers from '../../components/container/customer/Customers';
 
 function Page() {
   const tabs = [
@@ -15,7 +16,7 @@ function Page() {
     },
     {
       name: "Customer",
-      component: <div>Customer</div>
+      component: <Customers/>
     }
   ];
 

@@ -23,7 +23,7 @@ function Models() {
     }))
 
     if (!tunedData) return [];
-    if (!query) return tunedData;
+    if (!query || query === "") return tunedData;
 
     return tunedData?.filter((record: any) => {
       return Object.keys(record).some((key) => {
@@ -49,6 +49,7 @@ function Models() {
     {
       //action
       accessor: 'id',
+      title:'Action',
       render: (record: any) => (
         <Flex>
           <Button onClick={() => handleDelete(record.id)} variant='outline' size='xs' color='red'>Delete</Button>
