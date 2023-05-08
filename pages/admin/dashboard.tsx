@@ -38,6 +38,7 @@ function RepairerTable() {
       customer: repairer.customer?.phone + ' ' + (repairer.customer?.name ? repairer.customer.name : ''),
       problem: repairer.problem,
       status: repairer.status,
+      charge: repairer.charge,
       id: repairer._id
     }))
 
@@ -60,6 +61,9 @@ function RepairerTable() {
     },
     {
       accessor: 'problem'
+    },
+    {
+      accessor: 'charge',
     },
     {
       accessor: 'status'

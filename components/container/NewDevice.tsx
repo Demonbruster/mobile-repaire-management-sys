@@ -17,7 +17,7 @@ interface IProps {
   callBack?: () => void
 }
 
-function NewDevice({ name = '', callBack = () => { } }: IProps) {
+function NewDevice({ name = '', callBack}: IProps) {
   const queryClient = useQueryClient()
   const [isCollapseOpen, { toggle }] = useDisclosure(false);
   const [modalName, setModalName] = useState('')
@@ -26,7 +26,7 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
   const ownerQuery = useQuery({ queryKey: [reactQueryKey.customers], queryFn: async () => await getCustomers() })
   const deviceMutation = useMutation(async (value: IDevice_FE) => await createDevice(value), {
     onSuccess() {
-      return queryClient.invalidateQueries({ queryKey: [reactQueryKey.devices, reactQueryKey.customers] })
+      return queryClient.invalidateQueries({ queryKey: [reactQueryKey.devices] })
     },
   })
 
@@ -41,6 +41,9 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
     validate: {
       modelId: (value) => {
         if (!value || value === '') return 'Model is required'
+      },
+      customerId: (value) => {
+        if (!value || value === '') return 'Owner is required'
       },
     }
   })
@@ -61,7 +64,7 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
         message: 'Device created successfully.',
         type: 'success',
       })
-      callBack();
+      callBack && callBack();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deviceMutation.isSuccess])
@@ -96,13 +99,13 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
       </Button>
       <Collapse in={!isCollapseOpen} >
         <Box p='sm'>
-          <Title order={3}>New Device</Title>
           <form onSubmit={form.onSubmit(onSubmit)}>
             <Flex mt='md' direction='column'>
               <TextInput required label='Description' placeholder='Description' {...form.getInputProps('name')} />
               <Select searchable
                 nothingFound="No options"
                 creatable
+                withAsterisk
                 getCreateLabel={(value) => `+ modal: "${value}"`}
                 rightSection={<IconChevronDown size="1rem" />}
                 rightSectionWidth={30} label='Model' placeholder='Model' {...form.getInputProps('modelId')}
@@ -116,6 +119,7 @@ function NewDevice({ name = '', callBack = () => { } }: IProps) {
               <TextInput label='Color' placeholder='Color' {...form.getInputProps('color')} />
               <Select searchable
                 nothingFound="No options"
+                withAsterisk
                 rightSection={<IconChevronDown size="1rem" />}
                 rightSectionWidth={30} label='Owner Phone' placeholder='Owner Phone' {...form.getInputProps('customerId')}
                 data={listOfOwner} />

@@ -21,7 +21,7 @@ export default function NewRepairer() {
 
   const repairerMutation = useMutation(async (value: IRepairer_FE) => await createRepairer(value), {
     onSuccess() {
-      return queryClient.invalidateQueries({ queryKey: [reactQueryKey.repairers.toString(), reactQueryKey.customers, reactQueryKey.devices] })
+      return queryClient.invalidateQueries({ queryKey: [reactQueryKey.repairers] })
     },
   })
 
@@ -162,7 +162,7 @@ export default function NewRepairer() {
 
   return (
     <Box p='sm'>
-      <Text fz='lg' fw='bold'> Create new device </Text>
+      <Text fz='lg' fw='bold'> Create new repair </Text>
       <form onSubmit={form.onSubmit(onSubmit)}>
         <Flex mt='md' direction='column'>
           <Select

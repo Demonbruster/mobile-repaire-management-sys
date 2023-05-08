@@ -103,7 +103,6 @@ const Customers = () => {
             minHeight={sizes.MIN_TABLE_HEIGHT}
           />
         </Stack>
-
       </Box>
     </Box>
   )
