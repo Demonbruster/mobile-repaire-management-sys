@@ -21,7 +21,7 @@ function NewModel({ callBack, modalName }: IProps) {
 
   const modelMutation = useMutation(async (value: IModel_FE) => await createModel(value), {
     onSuccess(data) {
-      queryClient.invalidateQueries({ queryKey: [reactQueryKey.models, data.brandId] })
+      queryClient.invalidateQueries({ queryKey: [reactQueryKey.models] })
     },
   })
 
