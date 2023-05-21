@@ -36,9 +36,13 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
     router.push(pathParam)
   }, [router])
 
+  console.log(router.pathname)
+
+  const isIndexPage = router.pathname === '/'
+
   return <AppShell
     footer={
-      <Box sx={{
+      !isIndexPage ? <Box sx={{
         position: 'fixed',
         bottom: 0,
         height: 80,
@@ -63,6 +67,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
           </Box>)}
         </Flex>
       </Box>
+      : <></>
     }
   >
     {children}
